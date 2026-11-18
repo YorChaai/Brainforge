@@ -1,0 +1,133 @@
+{
+  "app.js": 1794981098.4138494,
+  "build_standalone.py": {
+    "mtime": 1794751697.7045066,
+    "seen": 1794752128.3535635,
+    "ast_hash": "a83e619c199da93150a9e2d684f21853",
+    "semantic_hash": ""
+  },
+  "gemini-autofill-extension/content.js": {
+    "mtime": 1794724865.4431684,
+    "seen": 1794749137.3382967,
+    "ast_hash": "5bfdff2d3f6b4b23d3c93c1d74ec8edd",
+    "semantic_hash": "5bfdff2d3f6b4b23d3c93c1d74ec8edd"
+  },
+  "gemini-autofill-extension/manifest.json": {
+    "mtime": 1794724865.5788107,
+    "seen": 1794749137.3382967,
+    "ast_hash": "661b6edc130be61f8b4c00100a686aad",
+    "semantic_hash": "661b6edc130be61f8b4c00100a686aad"
+  },
+  "mobile_app/lib/main.dart": 1794842897.7348282,
+  "mobile_app/test/widget_test.dart": {
+    "mtime": 1794727681.6621199,
+    "seen": 1794749137.3382967,
+    "ast_hash": "bf2de8d16cd1096fc675582899e89e56",
+    "semantic_hash": "bf2de8d16cd1096fc675582899e89e56"
+  },
+  "prompts.js": 1794997424.703249,
+  "server.py": {
+    "mtime": 1794752431.3358133,
+    "seen": 1794753200.709623,
+    "ast_hash": "cb851786754561d2732b182ec9f6e7cf",
+    "semantic_hash": ""
+  },
+  "sw.js": 1794997426.8862262,
+  ".agents/rules/ponytail.md": {
+    "mtime": 1794749124.4566453,
+    "seen": 1794751621.4951894,
+    "ast_hash": "49bceb82d64d8e572afd0f56cd27dbe0",
+    "semantic_hash": ""
+  },
+  "BrainForge_HP_Standalone.html": {
+    "mtime": 1794752453.4433203,
+    "seen": 1794753200.709623,
+    "ast_hash": "75fdc588c2c37f7051ed83b7cf0ffa98",
+    "semantic_hash": ""
+  },
+  "asset/Promt Formal.md": {
+    "mtime": 1794723983.385003,
+    "seen": 1794751621.4951894,
+    "ast_hash": "3d27d20c3308006ddf1d444df96c5bde",
+    "semantic_hash": ""
+  },
+  "asset/latihanbicara/chatgpt1.md": {
+    "mtime": 1794725241.3877194,
+    "seen": 1794751621.4951894,
+    "ast_hash": "ae7b31fd4a5b0ee21ba3865a61e8e861",
+    "semantic_hash": ""
+  },
+  "asset/latihanbicara/chatgpt2.md": {
+    "mtime": 1794725249.878186,
+    "seen": 1794751621.4951894,
+    "ast_hash": "e2a9e0313f47ce4b8b3652ec93b2e702",
+    "semantic_hash": ""
+  },
+  "asset/latihanbicara/chatgpt3.md": {
+    "mtime": 1794725267.9939785,
+    "seen": 1794751621.4951894,
+    "ast_hash": "9bdf768858ef87a876c5c920afa6e0a1",
+    "semantic_hash": ""
+  },
+  "asset/promt 3.0.md": {
+    "mtime": 1794724015.8799014,
+    "seen": 1794751621.4951894,
+    "ast_hash": "37b2930e5d36758c887c40dce64ce85e",
+    "semantic_hash": ""
+  },
+  "asset/promt Kutip.md": {
+    "mtime": 1794723983.8461447,
+    "seen": 1794751621.4951894,
+    "ast_hash": "730102b52f2ae6dc326506423121a8d6",
+    "semantic_hash": ""
+  },
+  "asset/promt2.0.md": {
+    "mtime": 1794723992.9275818,
+    "seen": 1794751621.4951894,
+    "ast_hash": "7a1e51784c37d54af988c9547d8583cc",
+    "semantic_hash": ""
+  },
+  "index.html": 1794980964.599209,
+  "mobile_app/README.md": {
+    "mtime": 1794727681.6571176,
+    "seen": 1794751621.4951894,
+    "ast_hash": "4499bb2b5fc7a539b4dc201a1c520919",
+    "semantic_hash": ""
+  },
+  "mobile_app/analysis_options.yaml": {
+    "mtime": 1794727681.5182774,
+    "seen": 1794751621.4951894,
+    "ast_hash": "9e65f4b9beebb674c0dc252f70a5c177",
+    "semantic_hash": ""
+  },
+  "mobile_app/assets/brainforge.html": {
+    "mtime": 1794752453.4448047,
+    "seen": 1794753200.709623,
+    "ast_hash": "75fdc588c2c37f7051ed83b7cf0ffa98",
+    "semantic_hash": ""
+  },
+  "mobile_app/pubspec.yaml": {
+    "mtime": 1794727918.6021948,
+    "seen": 1794751621.4951894,
+    "ast_hash": "42ce4fd423777b7d016620c70a235d1f",
+    "semantic_hash": ""
+  },
+  ".last_wifi_adb.json": {
+    "mtime": 1794753183.0656145,
+    "seen": 1794753200.709623,
+    "ast_hash": "1f79199fe3c4a6168154357e3b682a08",
+    "semantic_hash": ""
+  },
+  "release_wifi_adb.py": {
+    "mtime": 1794753164.2472217,
+    "seen": 1794753200.709623,
+    "ast_hash": "92736d85c96767439b3e8902afd739e3",
+    "semantic_hash": ""
+  },
+  "updated_at": "2026-11-15T22:26:02.396099",
+  "styles.css": 1794980972.0166104,
+  "logo.png": 1794763799.5131023,
+  "asset/catatan/analisis_19_games_brainforge.md": 1794981256.748479,
+  "README.md": 1795009845.6281717,
+  ".gitignore": 1795009843.108401
+}

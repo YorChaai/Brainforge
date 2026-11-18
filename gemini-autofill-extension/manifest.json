@@ -1,0 +1,13 @@
+{
+  "manifest_version": 3,
+  "name": "BrainForge.AI — Gemini Auto-Fill",
+  "version": "1.1.0",
+  "description": "Otomatis mengisi prompt dari BrainForge.AI langsung ke kolom Ask Gemini tanpa perlu Ctrl+V.",
+  "content_scripts": [
+    {
+      "matches": ["https://gemini.google.com/*"],
+      "js": ["content.js"],
+      "run_at": "document_start"
+    }
+  ]
+}

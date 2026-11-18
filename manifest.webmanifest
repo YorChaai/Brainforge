@@ -1,0 +1,21 @@
+{
+  "name": "BrainForge.AI Pro — Cognitive & Language Suite",
+  "short_name": "BrainForge.AI",
+  "description": "Aplikasi Latihan Otak, Memory, Active Recall, & Komunikasi Aktif.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#f8fafc",
+  "theme_color": "#2563eb",
+  "icons": [
+    {
+      "src": "logo.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "logo.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

@@ -1,0 +1,391 @@
+{
+  "communities": {
+    "0": [
+      "app",
+      "app_arcustombox",
+      "app_arcustominput",
+      "app_arpassagetext",
+      "app_arpassagetitle",
+      "app_arreadingbox",
+      "app_arrecallbox",
+      "app_arresultbox",
+      "app_artimerbadge",
+      "app_aruseranswer",
+      "app_auanswerinput",
+      "app_auinstruction",
+      "app_auresultbox",
+      "app_autitle",
+      "app_cachedvoices",
+      "app_cancelspeakbtn",
+      "app_ccrankicon",
+      "app_ccranktitle",
+      "app_ccxpbar",
+      "app_ccxpprogresstext",
+      "app_characterfieldgroup",
+      "app_characterinput",
+      "app_circuit_module_ids",
+      "app_circuitbanner",
+      "app_circuitbannersub",
+      "app_circuitbannertitle",
+      "app_cmdescinput",
+      "app_cmskillselect",
+      "app_cmtemplateinput",
+      "app_cmtitleinput",
+      "app_copyprompttoclipboardsync",
+      "app_custommodulemodal",
+      "app_customselectsyncers",
+      "app_dashboardview",
+      "app_default_state",
+      "app_deletecustommodulebtn",
+      "app_generatesequence",
+      "app_herogreeting",
+      "app_historylist",
+      "app_interactionselect",
+      "app_labaudio",
+      "app_labmath",
+      "app_labmemory",
+      "app_labrecall",
+      "app_labsocial",
+      "app_leveldeschard",
+      "app_leveldesclow",
+      "app_leveldescmedium",
+      "app_loadstate",
+      "app_mganswerinput",
+      "app_mgdisplay",
+      "app_mginputarea",
+      "app_mgroundel",
+      "app_mgscoreel",
+      "app_mgstartbtn",
+      "app_mgstatus",
+      "app_mgtargetsequence",
+      "app_mmanswerinput",
+      "app_mmexplanation",
+      "app_mmquestion",
+      "app_mmscoreel",
+      "app_mmstreakel",
+      "app_modulegrid",
+      "app_navavatar",
+      "app_navlang",
+      "app_navname",
+      "app_navrankicon",
+      "app_navrankname",
+      "app_navstreak",
+      "app_navxp",
+      "app_personaselect",
+      "app_profilelangselect",
+      "app_profilemodal",
+      "app_profilenameinput",
+      "app_profilepersonaselect",
+      "app_promptbuilderpanel",
+      "app_promptoutput",
+      "app_roundsselect",
+      "app_skillbarsel",
+      "app_socanswerinput",
+      "app_socformulatext",
+      "app_soclevelbadge",
+      "app_socresultbox",
+      "app_socscenariotext",
+      "app_soctitleel",
+      "app_speakpromptbtn",
+      "app_state",
+      "app_tabweblabbtn",
+      "app_toastel",
+      "app_topicbrowserpanel",
+      "app_topicbrowsertoggle",
+      "app_topicinput",
+      "app_topicpagelistel",
+      "app_topicpagetabsel",
+      "app_topicsearchinput",
+      "app_triggerlocalautopaste",
+      "app_weblabpanel",
+      "app_word_bank_en",
+      "app_word_bank_id",
+      "app_workspaceview",
+      "app_wsbadge",
+      "app_wsdesc",
+      "app_wsicon",
+      "app_wstitle"
+    ],
+    "1": [
+      "prompts",
+      "prompts_buildadvancedprompt",
+      "prompts_buildrawadvancedprompt",
+      "prompts_default_modules",
+      "prompts_dialogue_scripts",
+      "prompts_generatetopicpoolformodule",
+      "prompts_getlanguagerule",
+      "prompts_listening_scripts",
+      "prompts_personas",
+      "prompts_rank_tiers",
+      "prompts_recall_passages",
+      "prompts_sanitizeprompttext",
+      "prompts_skill_meta",
+      "prompts_social_lab_scenarios",
+      "prompts_topic_angles",
+      "prompts_topic_debate_angles",
+      "prompts_topic_lang_drill_angles",
+      "prompts_topic_math_angles",
+      "prompts_topic_memory_angles",
+      "prompts_topic_pool_cache",
+      "prompts_topic_social_situations",
+      "prompts_topic_social_twists",
+      "prompts_topic_solver_angles",
+      "prompts_topic_special_subjects",
+      "prompts_topic_subjects"
+    ],
+    "2": [
+      "dart_convert",
+      "mobile_app_lib_main",
+      "mobile_app_lib_main_brainforgeapp",
+      "mobile_app_lib_main_brainforgewebviewpage",
+      "mobile_app_lib_main_brainforgewebviewpagestate",
+      "mobile_app_lib_main_build",
+      "mobile_app_lib_main_controller",
+      "mobile_app_lib_main_createstate",
+      "mobile_app_lib_main_handlewebviewback",
+      "mobile_app_lib_main_initstate",
+      "mobile_app_lib_main_main",
+      "mobile_app_lib_main_showexitconfirmationdialog",
+      "mobile_app_test_widget_test",
+      "mobile_app_test_widget_test_main",
+      "package_brainforge_app_main_dart",
+      "package_flutter_material_dart",
+      "package_flutter_services_dart",
+      "package_flutter_test_flutter_test_dart",
+      "package_url_launcher_url_launcher_dart",
+      "package_webview_flutter_webview_flutter_dart",
+      "state",
+      "statefulwidget",
+      "statelesswidget",
+      "webviewcontroller"
+    ],
+    "3": [
+      "ctypes",
+      "http_server",
+      "json",
+      "os",
+      "server",
+      "server_auto_paste_after_delay",
+      "server_auto_paste_after_delay_worker",
+      "server_brainforgehandler",
+      "server_brainforgehandler_do_options",
+      "server_brainforgehandler_do_post",
+      "server_brainforgehandler_end_headers",
+      "server_brainforgehandler_init",
+      "server_brainforgehandler_log_message",
+      "server_dualstackserver",
+      "server_dualstackserver_server_bind",
+      "server_rationale_16",
+      "server_send_ctrl_v_native",
+      "socket",
+      "sys",
+      "threading",
+      "time",
+      "webbrowser"
+    ],
+    "4": [
+      "app_escapehtml",
+      "app_getallmodules",
+      "app_initweblabformodule",
+      "app_langlabel",
+      "app_loadaudioscenario",
+      "app_loadrecallpassage",
+      "app_loadsocialscenario",
+      "app_openmodule",
+      "app_renderdashboard",
+      "app_renderhistory",
+      "app_rendertopicbrowser",
+      "app_setworkspacetab",
+      "app_stopspeech",
+      "app_syncconfigbuttons",
+      "app_synccustomselects",
+      "app_synctopiceditorui",
+      "app_updateprompt"
+    ],
+    "5": [
+      "app_checkmathanswer",
+      "app_checkminigameanswer",
+      "app_generatemathquestion",
+      "app_getrankinfo",
+      "app_gettodaystr",
+      "app_recordsession",
+      "app_renderheaderandstats",
+      "app_savestate",
+      "app_xpforlevel"
+    ],
+    "6": [
+      "app_cleanmarkdownforspeech",
+      "app_pickfemalevoice",
+      "app_refreshvoices",
+      "app_setspeakinguistate",
+      "app_showtoast",
+      "app_speaktext",
+      "app_startmicdictation"
+    ],
+    "7": [
+      "gemini_autofill_extension_manifest",
+      "gemini_autofill_extension_manifest_content_scripts",
+      "gemini_autofill_extension_manifest_description",
+      "gemini_autofill_extension_manifest_manifest_version",
+      "gemini_autofill_extension_manifest_name",
+      "gemini_autofill_extension_manifest_version"
+    ],
+    "8": [
+      "app_closeallcustomselects",
+      "app_closetopicbrowser",
+      "app_initcustomselects",
+      "app_initcustomselects_sync"
+    ],
+    "9": [
+      "base64",
+      "build_standalone",
+      "pathlib"
+    ],
+    "10": [
+      "gemini_autofill_extension_content",
+      "gemini_autofill_extension_content_fillgeminibox"
+    ],
+    "11": [
+      "sw",
+      "sw_assets"
+    ]
+  },
+  "cohesion": {
+    "0": 0.019230769230769232,
+    "1": 0.09,
+    "2": 0.08695652173913043,
+    "3": 0.11688311688311688,
+    "4": 0.16176470588235295,
+    "5": 0.25,
+    "6": 0.2857142857142857,
+    "7": 0.3333333333333333,
+    "8": 0.6666666666666666,
+    "9": 0.6666666666666666,
+    "10": 1.0,
+    "11": 1.0
+  },
+  "gods": [
+    {
+      "id": "app_openmodule",
+      "label": "openModule()",
+      "degree": 9
+    },
+    {
+      "id": "app_recordsession",
+      "label": "recordSession()",
+      "degree": 7
+    },
+    {
+      "id": "server_brainforgehandler",
+      "label": "BrainForgeHandler",
+      "degree": 6
+    },
+    {
+      "id": "app_initweblabformodule",
+      "label": "initWebLabForModule()",
+      "degree": 6
+    },
+    {
+      "id": "app_renderdashboard",
+      "label": "renderDashboard()",
+      "degree": 6
+    },
+    {
+      "id": "app_rendertopicbrowser",
+      "label": "renderTopicBrowser()",
+      "degree": 6
+    },
+    {
+      "id": "app_stopspeech",
+      "label": "stopSpeech()",
+      "degree": 5
+    },
+    {
+      "id": "app_updateprompt",
+      "label": "updatePrompt()",
+      "degree": 5
+    },
+    {
+      "id": "app_checkmathanswer",
+      "label": "checkMathAnswer()",
+      "degree": 5
+    },
+    {
+      "id": "app_speaktext",
+      "label": "speakText()",
+      "degree": 5
+    }
+  ],
+  "surprises": [
+    {
+      "source": "initWebLabForModule()",
+      "target": "generateMathQuestion()",
+      "source_files": [
+        "app.js",
+        "app.js"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "calls",
+      "note": "Bridges community 4 → community 5"
+    },
+    {
+      "source": "stopSpeech()",
+      "target": "setSpeakingUiState()",
+      "source_files": [
+        "app.js",
+        "app.js"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "calls",
+      "note": "Bridges community 4 → community 6"
+    },
+    {
+      "source": "checkMathAnswer()",
+      "target": "showToast()",
+      "source_files": [
+        "app.js",
+        "app.js"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "calls",
+      "note": "Bridges community 5 → community 6"
+    }
+  ],
+  "questions": [
+    {
+      "type": "bridge_node",
+      "question": "Why does `initCustomSelects()` connect `initCustomSelects` to `app.js`?",
+      "why": "High betweenness centrality (0.003) - this node is a cross-community bridge."
+    },
+    {
+      "type": "isolated_nodes",
+      "question": "What connects `build`, `_controller`, `createState` to the rest of the system?",
+      "why": "8 weakly-connected nodes found - possible documentation gaps or missing edges."
+    },
+    {
+      "type": "low_cohesion",
+      "question": "Should `app.js` be split into smaller, more focused modules?",
+      "why": "Cohesion score 0.019230769230769232 - nodes in this community are weakly interconnected."
+    },
+    {
+      "type": "bridge_node",
+      "question": "Why does `closeAllCustomSelects()` connect `initCustomSelects` to `app.js`?",
+      "why": "High betweenness centrality (0.003) - this node is a cross-community bridge."
+    },
+    {
+      "type": "low_cohesion",
+      "question": "Should `prompts.js` be split into smaller, more focused modules?",
+      "why": "Cohesion score 0.09 - nodes in this community are weakly interconnected."
+    },
+    {
+      "type": "low_cohesion",
+      "question": "Should `main.dart` be split into smaller, more focused modules?",
+      "why": "Cohesion score 0.08695652173913043 - nodes in this community are weakly interconnected."
+    },
+    {
+      "type": "low_cohesion",
+      "question": "Should `server.py` be split into smaller, more focused modules?",
+      "why": "Cohesion score 0.11688311688311688 - nodes in this community are weakly interconnected."
+    }
+  ]
+}

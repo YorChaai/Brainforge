@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#2563eb" />
+  <title>BrainForge.AI Pro — Cognitive, Speaking &amp; Text Mastery Suite</title>
+  <link rel="icon" type="image/png" href="logo.png" />
+  <link rel="apple-touch-icon" href="logo.png" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="bg-grid"></div>
+
+  <!-- Top Navbar -->
+  <header class="navbar">
+    <div class="nav-inner">
+      <button class="brand" id="nav-home-btn" type="button" aria-label="Kembali ke Beranda">
+        <img src="logo.png" alt="BrainForge.AI" class="brand-logo-img" />
+        <span class="brand-text">
+          <strong>BrainForge.AI <span class="pro-badge">PRO</span></strong>
+          <small>19 COGNITIVE, SPEAKING &amp; ANALYSIS GAMES</small>
+        </span>
+      </button>
+
+      <div class="nav-actions">
+        <div class="rank-pill" id="nav-rank-pill" title="Rank Kognitif Saat Ini">
+          <span id="nav-rank-icon">🌱</span>
+          <strong id="nav-rank-name">Novice Mind</strong>
+        </div>
+        <div class="stat-pill" title="Total XP &amp; Streak Harian">
+          <span>⚡ <strong id="nav-xp">0</strong> XP</span>
+          <span class="dot">•</span>
+          <span>🔥 <strong id="nav-streak">0</strong> Hari</span>
+        </div>
+        <button class="profile-pill" id="open-profile-btn" type="button">
+          <span class="avatar" id="nav-avatar">D</span>
+          <span class="profile-meta">
+            <strong id="nav-name">Dio</strong>
+            <small id="nav-lang">ID &amp; EN</small>
+          </span>
+          <span class="edit-icon">⚙</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- ==================== DASHBOARD VIEW ==================== -->
+    <section id="dashboard-view" class="view active">
+      <div class="hero">
+        <p class="greeting" id="hero-greeting">👋 Halo! Siap upgrade kapasitas otak &amp; keluwesan bicara hari ini?</p>
+        <h1>Pusat Latihan Otak, Bicara Terstruktur &amp; Analisis Teks</h1>
+        <p class="subtitle">
+          <strong>19 game unik dalam 5 kategori</strong> berlevel <strong>Low / Medium / Hard</strong> — mainkan semua langsung di <strong>Web Lab Interaktif (Audio Multi-Voice + Mic)</strong> atau luncurkan prompt adaptif ke <strong>Gemini &amp; ChatGPT</strong>.
+        </p>
+      </div>
+
+      <!-- Cognitive Command Center (RPG Stats + Circuits + Speaking Diagnostic) -->
+      <section class="command-center">
+        <div class="cc-left">
+          <div class="cc-rank-header">
+            <div class="cc-rank-badge" id="cc-rank-icon">🌱</div>
+            <div class="cc-rank-info">
+              <div class="cc-rank-title-row">
+                <strong id="cc-rank-title">Novice Mind</strong>
+                <span class="cc-xp-text" id="cc-xp-progress-text">0 / 150 XP ke level berikutnya</span>
+              </div>
+              <div class="progress-track">
+                <div class="progress-fill" id="cc-xp-bar" style="width: 0%"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="skill-bars" id="skill-bars">
+            <!-- Rendered by app.js -->
+          </div>
+        </div>
+
+        <div class="cc-right">
+          <div class="circuit-box">
+            <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;">
+              <span class="circuit-tag">⚡ PROGRAM LATIHAN TERPADU</span>
+              <button type="button" class="btn-secondary btn-sm" id="open-diagnostic-btn" style="font-size:11.5px;padding:5px 10px;">
+                🩺 Diagnostik Bicara &amp; Program 14 Hari
+              </button>
+            </div>
+            <h3>Pilih Sirkuit Harianmu</h3>
+            <p>Jalankan sirkuit kognitif 4-tahap atau latihan bicara 15 menit (3×5 menit) sesuai targetmu hari ini.</p>
+            <div class="circuit-steps" id="circuit-steps-preview">
+              <span>🗣️ 15m Bicara: 5m Initiation → 5m Continuation → 5m Simulasi</span>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px;">
+              <button type="button" class="btn-gemini" id="start-speaking-circuit-btn" style="padding:10px 12px;font-size:13px;">
+                🗣️ Latihan Bicara 15 Menit
+              </button>
+              <button type="button" class="btn-secondary" id="start-circuit-btn" style="padding:10px 12px;font-size:13px;">
+                🧠 Brain Circuit (4 Tahap)
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Category Filter & Custom Module Button -->
+      <div class="toolbar-row">
+        <div class="category-tabs" id="category-tabs">
+          <button type="button" class="cat-tab active" data-cat="all">Semua Game (19)</button>
+          <button type="button" class="cat-tab" data-cat="core">🧠 4 Inti (Memory &amp; Recall)</button>
+          <button type="button" class="cat-tab" data-cat="social">💬 Latihan Bicara &amp; Sosial (4)</button>
+          <button type="button" class="cat-tab" data-cat="cognitive">⚡ Logika &amp; Deep Thinking (4)</button>
+          <button type="button" class="cat-tab" data-cat="language">🗣️ Bahasa &amp; English (4)</button>
+          <button type="button" class="cat-tab" data-cat="analysis">🔬 Analisis Teks &amp; Transkrip (3)</button>
+          <button type="button" class="cat-tab" data-cat="custom">✨ Modul Buatanku</button>
+        </div>
+        <button type="button" class="btn-secondary btn-sm" id="open-custom-modal-btn">
+          + Buat Modul Sendiri
+        </button>
+      </div>
+
+      <!-- Personalized Priority Star Filter -->
+      <div class="star-filter-row" id="star-filter-tabs" aria-label="Filter Prioritas Bintang">
+        <button type="button" class="star-tab active" data-star="all">⭐ Semua Bintang (19)</button>
+        <button type="button" class="star-tab" data-star="5">★★★★★ Wajib (7)</button>
+        <button type="button" class="star-tab" data-star="4">★★★★☆ Disarankan (4)</button>
+        <button type="button" class="star-tab" data-star="3">★★★☆☆ Opsional (3)</button>
+        <button type="button" class="star-tab" data-star="2">★★☆☆☆ Selingan (2)</button>
+        <button type="button" class="star-tab" data-star="1">★☆☆☆☆ Lewati Dulu (3)</button>
+      </div>
+
+      <!-- Module Cards Grid -->
+      <div class="module-grid" id="module-grid">
+        <!-- Rendered by app.js -->
+      </div>
+
+      <!-- Recent History -->
+      <section class="history-card">
+        <div class="history-header">
+          <div>
+            <h2>Riwayat &amp; Log Latihan</h2>
+            <p>Semua progres XP, statistik 5 skill, kurikulum 14 hari, dan riwayat topik tersimpan otomatis di perangkatmu.</p>
+          </div>
+          <button class="btn-ghost btn-sm" id="clear-history-btn" type="button">Reset Progres</button>
+        </div>
+        <div id="history-list" class="history-list">
+          <!-- Rendered by app.js -->
+        </div>
+      </section>
+    </section>
+
+    <!-- ==================== WORKSPACE VIEW ==================== -->
+    <section id="workspace-view" class="view">
+      <!-- Circuit Banner (shown when in Daily Circuit or 15-Min Speaking Circuit mode) -->
+      <div class="circuit-banner" id="circuit-banner" hidden>
+        <div>
+          <strong id="circuit-banner-title">⚡ Daily Circuit: Tahap 1</strong>
+          <span id="circuit-banner-sub">Selesaikan tahap ini lalu klik Tahap Berikutnya.</span>
+        </div>
+        <div class="circuit-banner-actions">
+          <span class="badge badge-xp" id="circuit-timer-badge" hidden style="font-size:13px;padding:6px 12px;">⏱️ 05:00</span>
+          <button type="button" class="btn-secondary btn-sm" id="next-circuit-btn">Tahap Berikutnya →</button>
+          <button type="button" class="btn-ghost btn-sm" id="exit-circuit-btn">Keluar Sirkuit</button>
+        </div>
+      </div>
+
+      <div class="workspace-top-bar">
+        <button class="btn-back" id="back-to-dashboard-btn" type="button">← Kembali ke Dashboard</button>
+        <div class="workspace-top-right">
+          <div class="workspace-badge" id="ws-badge">Modul</div>
+        </div>
+      </div>
+
+      <div class="workspace-header-card">
+        <div class="ws-title-row">
+          <div class="ws-icon" id="ws-icon">🧠</div>
+          <div style="flex:1;">
+            <h1 id="ws-title">Judul Modul</h1>
+            <p id="ws-desc">Deskripsi modul</p>
+            <div id="ws-unique-mechanic" style="margin-top:8px;font-size:12.5px;color:#1d4ed8;background:#eff6ff;border:1px solid #bfdbfe;padding:6px 12px;border-radius:10px;display:inline-block;font-weight:600;"></div>
+          </div>
+        </div>
+
+        <div class="mode-tabs" id="ws-mode-tabs">
+          <button type="button" class="mode-tab active" data-mode="prompt">🚀 Prompt Launcher (Gemini / ChatGPT)</button>
+          <button type="button" class="mode-tab" id="tab-weblab-btn" data-mode="weblab">🎮 Main Langsung di Web Lab (Interaktif &amp; Audio)</button>
+        </div>
+      </div>
+
+      <!-- PANEL 1: SMART PROMPT BUILDER -->
+      <div id="prompt-builder-panel" class="workspace-body">
+        <div class="config-card">
+          <div class="field-group">
+            <label>1. Pilih Level Tantangan (Spesifikasi Unik per Game)</label>
+            <div class="level-selector" id="level-selector">
+              <button type="button" class="level-btn active" data-level="Low">
+                <div class="level-btn-top">
+                  <strong>Low</strong>
+                  <span class="xp-pill">+25 XP</span>
+                </div>
+                <small id="level-desc-low">Santai &amp; dasar</small>
+              </button>
+              <button type="button" class="level-btn" data-level="Medium">
+                <div class="level-btn-top">
+                  <strong>Medium</strong>
+                  <span class="xp-pill">+45 XP</span>
+                </div>
+                <small id="level-desc-medium">Menengah &amp; detail</small>
+              </button>
+              <button type="button" class="level-btn" data-level="Hard">
+                <div class="level-btn-top">
+                  <strong>Hard</strong>
+                  <span class="xp-pill">+70 XP</span>
+                </div>
+                <small id="level-desc-hard">Cepat &amp; kompleks</small>
+              </button>
+            </div>
+          </div>
+
+          <div class="config-grid-2">
+            <div class="field-group">
+              <label>2. Pilih Bahasa Latihan</label>
+              <div class="lang-selector" id="lang-selector">
+                <button type="button" class="chip-btn active" data-lang="id">🇮🇩 Indonesia</button>
+                <button type="button" class="chip-btn" data-lang="en">🇬🇧 English</button>
+                <button type="button" class="chip-btn" data-lang="bilingual">🌐 Campur (ID + EN)</button>
+              </div>
+            </div>
+
+            <div class="field-group">
+              <div class="label-row">
+                <label>3. Mode Interaksi &amp; Jumlah Ronde</label>
+                <button type="button" class="btn-link" id="reset-interaction-btn" title="Reset pilihan ke default">↺ Reset Default</button>
+              </div>
+              <div class="interaction-select-grid">
+                <select id="persona-select" class="select-compact" title="Gaya Coach AI">
+                  <option value="bro">😎 Tutor Santai (Gen-Z / Bro)</option>
+                  <option value="socratic">🧠 Socratic &amp; Kritis</option>
+                  <option value="strict">🎯 Tegas &amp; Presisi</option>
+                  <option value="mentor">🤝 Mentor Eksekutif</option>
+                </select>
+                <select id="rounds-select" class="select-compact" title="Jumlah Ronde">
+                  <option value="3">3 Ronde</option>
+                  <option value="5">5 Ronde</option>
+                  <option value="10">10 Ronde</option>
+                  <option value="20">20 Ronde</option>
+                </select>
+                <select id="interaction-select" class="select-compact" title="Mode Suara atau Teks">
+                  <option value="chat">💬 Mode Chat</option>
+                  <option value="voice">🎙️ Mode Suara (Voice)</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Character Input (Visible for Roleplay & Speaking Simulation) -->
+          <div class="field-group" id="character-field-group" hidden>
+            <label for="character-input">🎭 Siapa tokoh lawan bicara yang ingin kamu ajak ngobrol?</label>
+            <input
+              type="text"
+              id="character-input"
+              class="text-input"
+              placeholder="Contoh: Rekan kerja bagian HSE, Barista di London, HRD Perusahaan, Klien Proyek..."
+            />
+          </div>
+
+          <div class="field-group topic-field-group">
+            <div class="label-row">
+              <label for="topic-input" id="topic-field-label">4. Pilih atau Tulis Topik Latihan <span class="optional">(opsional — terkurasi per kategori)</span></label>
+              <button type="button" class="btn-link" id="random-topic-btn">🎲 Acak Topik Terkurasi</button>
+            </div>
+            <div class="topic-browser-wrap" id="topic-browser-wrap">
+              <button type="button" class="topic-browser-toggle" id="topic-browser-toggle">
+                <span id="topic-browser-toggle-label">📂 Pilih dari Kategori &amp; Subkategori Topik Terkurasi (ID / EN)</span>
+                <span class="tb-arrow" id="tb-arrow">▼</span>
+              </button>
+              <div class="topic-browser-panel" id="topic-browser-panel" hidden>
+                <div class="tb-panel-header">
+                  <strong>📂 Katalog Topik &amp; Skenario Terkurasi</strong>
+                  <button type="button" class="btn-close-red" id="topic-browser-close-btn" title="Tutup katalog topik">✕</button>
+                </div>
+                <div class="tb-search-row">
+                  <input
+                    type="search"
+                    id="topic-search-input"
+                    class="text-input tb-search-input"
+                    placeholder="🔍 Cari topik (misal: HSE, APD, Python, Bandung, rapat, tidur)..."
+                  />
+                </div>
+                <div class="topic-page-tabs" id="topic-page-tabs">
+                  <!-- Category tabs rendered by app.js -->
+                </div>
+                <div class="topic-page-list" id="topic-page-list">
+                  <!-- Subcategories & curated topics rendered by app.js -->
+                </div>
+              </div>
+            </div>
+            <div class="topic-editor-box" style="margin-top: 10px;">
+              <textarea
+                id="topic-input"
+                class="text-input topic-textarea"
+                rows="3"
+                placeholder="Tulis topik, situasi obrolan, atau tempel (paste) teks sumber yang ingin dibedah di sini..."
+              ></textarea>
+              <button type="button" class="btn-close-red topic-clear-btn" id="clear-topic-btn" title="Hapus / Kosongkan topik" hidden>✕</button>
+              <div class="topic-editor-footer">
+                <span class="topic-editor-hint" id="topic-editor-hint">✍️ Bebas dikosongkan (AI akan memilihkan otomatis) atau isi sesuai kebutuhanmu.</span>
+                <span class="topic-char-count" id="topic-char-count">0 karakter</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="prompt-card">
+          <div class="prompt-card-header">
+            <div>
+              <h2>Master Prompt Siap Pakai</h2>
+              <p>Dirakit secara spesifik mengikuti keunikan game, level, bahasa, dan topik pilihanmu.</p>
+            </div>
+            <div class="prompt-header-btns">
+              <button type="button" class="btn-ghost btn-sm" id="speak-prompt-btn">🔊 Bacakan</button>
+              <button type="button" class="btn-cancel-voice btn-sm" id="cancel-speak-btn" title="Hentikan pembacaan suara">⏹ Cancel</button>
+              <button type="button" class="btn-secondary btn-sm" id="copy-prompt-btn">📋 Copy Prompt</button>
+            </div>
+          </div>
+
+          <textarea id="prompt-output" class="prompt-textarea" rows="13"></textarea>
+
+          <div class="launcher-actions">
+            <button type="button" class="btn-gemini" id="launch-gemini-btn">
+              <span>✨</span>
+              <span>Lanjut ke Gemini</span>
+            </button>
+            <button type="button" class="btn-chatgpt" id="launch-chatgpt-btn">
+              <span>🤖</span>
+              <span>Lanjut ke ChatGPT</span>
+            </button>
+            <button type="button" class="btn-complete" id="mark-complete-btn">
+              <span>✓</span>
+              <span>Catat Selesai (+XP)</span>
+            </button>
+          </div>
+          <p class="launcher-hint">
+            💡 <strong>Integrasi Cerdas:</strong> Klik <em>Lanjut ke Gemini</em> otomatis menyalin prompt, mengirim parameter <code>#bf_prompt</code> untuk ekstensi Auto-Fill, &amp; memicu Auto-Paste lokal. Klik <em>Lanjut ke ChatGPT</em> langsung mengisi prompt otomatis via URL.
+          </p>
+        </div>
+      </div>
+
+      <!-- PANEL 2: INTERACTIVE WEB LAB (Mendukung Seluruh 19 Game!) -->
+      <div id="weblab-panel" class="workspace-body" hidden>
+        <!-- LAB A: MEMORY SPAN MATRIX (Visual + Audio ID/EN + Context Words) -->
+        <div class="minigame-card" id="lab-memory" hidden>
+          <div class="mg-controls">
+            <div class="mg-control-group">
+              <label>Level:</label>
+              <div class="mg-pills" id="mg-level-pills">
+                <button type="button" class="chip-btn active" data-mg-level="Low">Low (4 Maju)</button>
+                <button type="button" class="chip-btn" data-mg-level="Medium">Medium (6 Maju)</button>
+                <button type="button" class="chip-btn" data-mg-level="Hard">Hard (8 Terbalik)</button>
+              </div>
+            </div>
+            <div class="mg-control-group">
+              <label>Tipe:</label>
+              <div class="mg-pills" id="mg-type-pills">
+                <button type="button" class="chip-btn active" data-mg-type="numbers">Angka</button>
+                <button type="button" class="chip-btn" data-mg-type="words-id">Kata (ID)</button>
+                <button type="button" class="chip-btn" data-mg-type="words-en">Words (EN)</button>
+                <button type="button" class="chip-btn" data-mg-type="audio-id">🔊 Audio (ID)</button>
+                <button type="button" class="chip-btn" data-mg-type="audio-en">🔊 Audio (EN)</button>
+              </div>
+            </div>
+            <div class="mg-score-box">
+              Ronde: <strong id="mg-round">1</strong> • Skor: <strong id="mg-score">0</strong>
+            </div>
+          </div>
+
+          <div class="mg-stage">
+            <p class="mg-status" id="mg-status">Pilih level &amp; tipe, lalu klik Mulai Ronde untuk melatih Working Memory.</p>
+            <div class="mg-display" id="mg-display">—</div>
+            <div class="mg-input-area" id="mg-input-area" hidden>
+              <input
+                type="text"
+                id="mg-answer-input"
+                class="text-input"
+                placeholder="Ketik urutan yang kamu ingat (pisahkan dengan spasi)..."
+                autocomplete="off"
+              />
+              <button type="button" class="btn-secondary" id="mg-mic-btn" title="Jawab pakai suara (Mic)">🎙️</button>
+              <button type="button" class="btn-primary" id="mg-submit-btn">Cek Jawaban</button>
+            </div>
+          </div>
+
+          <div class="mg-footer">
+            <button type="button" class="btn-primary" id="mg-start-btn">▶ Mulai Ronde Baru</button>
+            <span class="mg-rule-note">Low: 4 item • Medium: 6 item • Hard: 8 item (ketik urutan terbalik dari belakang!)</span>
+          </div>
+        </div>
+
+        <!-- LAB B: ACTIVE RECALL READER (Read -> Lock -> Explain via Text or Mic) -->
+        <div class="minigame-card" id="lab-recall" hidden>
+          <div class="mg-controls">
+            <div class="mg-control-group">
+              <label>Level Bacaan:</label>
+              <div class="mg-pills" id="ar-level-pills">
+                <button type="button" class="chip-btn active" data-ar-level="Low">Low</button>
+                <button type="button" class="chip-btn" data-ar-level="Medium">Medium</button>
+                <button type="button" class="chip-btn" data-ar-level="Hard">Hard</button>
+              </div>
+            </div>
+            <div class="mg-control-group">
+              <button type="button" class="btn-secondary btn-sm" id="ar-next-passage-btn">🔄 Ganti Bacaan</button>
+              <button type="button" class="btn-ghost btn-sm" id="ar-speak-passage-btn">🔊 Dengarkan</button>
+              <button type="button" class="btn-ghost btn-sm" id="ar-custom-toggle-btn">✍️ Tempel Teks Sendiri</button>
+            </div>
+          </div>
+
+          <div id="ar-custom-box" class="lab-box" hidden>
+            <label style="font-size:13px;font-weight:700;display:block;margin-bottom:6px;">Tempel Paragraf Buku/Artikel yang Ingin Kamu Kuasai:</label>
+            <textarea id="ar-custom-input" class="prompt-textarea" rows="4" placeholder="Paste paragraf artikel/materi di sini lalu klik Gunakan Teks Ini..."></textarea>
+            <button type="button" class="btn-primary btn-sm" id="ar-use-custom-btn">Gunakan Teks Ini</button>
+          </div>
+
+          <div class="lab-reading-box" id="ar-reading-box">
+            <div class="lab-reading-header">
+              <strong id="ar-passage-title">Judul Bacaan</strong>
+              <span class="badge badge-xp" id="ar-timer-badge">Waktu Baca: 0d</span>
+            </div>
+            <p id="ar-passage-text" class="lab-passage-text"></p>
+            <div style="margin-top: 14px;">
+              <button type="button" class="btn-primary" id="ar-lock-btn">🔒 Tutup Buku &amp; Mulai Jelaskan Kembali</button>
+            </div>
+          </div>
+
+          <div class="lab-recall-box" id="ar-recall-box" hidden>
+            <div class="label-row" style="margin-bottom:8px;">
+              <label><strong>Bacaan Dikunci!</strong> Jelaskan kembali seluruh konsep &amp; detail paragraf tadi dengan bahasamu sendiri:</label>
+              <button type="button" class="btn-secondary btn-sm" id="ar-mic-btn">🎙️ Rekam Penjelasan Suara</button>
+            </div>
+            <textarea id="ar-user-answer" class="prompt-textarea" rows="5" placeholder="Ketik atau ucapkan semua poin penting yang kamu ingat tanpa mengintip..."></textarea>
+            <div class="launcher-actions" style="grid-template-columns: auto auto 1fr;">
+              <button type="button" class="btn-primary" id="ar-evaluate-btn">✓ Evaluasi Pemahamanku</button>
+              <button type="button" class="btn-ghost" id="ar-peek-btn">👀 Buka Kembali Teks (Reset Kunci)</button>
+            </div>
+          </div>
+
+          <div class="lab-result-box" id="ar-result-box" hidden></div>
+        </div>
+
+        <!-- LAB C: LISTENING AUDIO LAB & MULTI-VOICE DIALOGUE LAB -->
+        <div class="minigame-card" id="lab-audio" hidden>
+          <div class="mg-controls">
+            <div class="mg-control-group">
+              <label>Level Audio:</label>
+              <div class="mg-pills" id="au-level-pills">
+                <button type="button" class="chip-btn active" data-au-level="Low">Low (Jelas)</button>
+                <button type="button" class="chip-btn" data-au-level="Medium">Medium (Natural)</button>
+                <button type="button" class="chip-btn" data-au-level="Hard">Hard (Padat/Ralat)</button>
+              </div>
+            </div>
+            <div class="mg-control-group">
+              <button type="button" class="btn-secondary btn-sm" id="au-next-btn">🔄 Ganti Skenario Audio</button>
+            </div>
+          </div>
+
+          <div class="audio-stage">
+            <h3 id="au-title">Judul Audio</h3>
+            <p class="mg-status" id="au-instruction">Klik Putar Audio, dengarkan baik-baik tanpa melihat teks, lalu tuliskan informasi yang kamu tangkap.</p>
+            <div class="audio-controls-row">
+              <button type="button" class="btn-gemini" id="au-play-btn">🔊 Putar Audio Sekarang</button>
+              <button type="button" class="btn-ghost btn-sm" id="au-stop-btn">⏹ Berhenti</button>
+            </div>
+            <small id="au-plays-left" style="display:block;margin-top:8px;color:#64748b;">Diputar: 0x (Rekomendasi: maksimal 2x putar sebelum menjawab)</small>
+          </div>
+
+          <div class="field-group" style="margin-top:16px;">
+            <div class="label-row">
+              <label for="au-answer-input">Tuliskan Informasi Atomic / Rekonstruksi Isi Percakapan:</label>
+              <button type="button" class="btn-secondary btn-sm" id="au-mic-btn">🎙️ Jawab Pakai Suara</button>
+            </div>
+            <textarea id="au-answer-input" class="prompt-textarea" rows="4" placeholder="1. ...\n2. ...\n3. ..."></textarea>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;">
+              <button type="button" class="btn-primary" id="au-check-btn">✓ Cek Jawaban &amp; Lihat Transkrip Asli</button>
+            </div>
+          </div>
+
+          <div class="lab-result-box" id="au-result-box" hidden></div>
+        </div>
+
+        <!-- LAB D: MENTAL MATH & PATTERN BLITZ -->
+        <div class="minigame-card" id="lab-math" hidden>
+          <div class="mg-controls">
+            <div class="mg-control-group">
+              <label>Level:</label>
+              <div class="mg-pills" id="mm-level-pills">
+                <button type="button" class="chip-btn active" data-mm-level="Low">Low (Berantai)</button>
+                <button type="button" class="chip-btn" data-mm-level="Medium">Medium (Kali &amp; %)</button>
+                <button type="button" class="chip-btn" data-mm-level="Hard">Hard (Deret &amp; Cerita)</button>
+              </div>
+            </div>
+            <div class="mg-score-box">
+              Combo: <strong id="mm-streak">0</strong> 🔥 • Skor: <strong id="mm-score">0</strong>
+            </div>
+          </div>
+
+          <div class="mg-stage">
+            <p class="mg-status" id="mm-status">Hitung di luar kepala tanpa kalkulator!</p>
+            <div class="mg-display" id="mm-question" style="font-size:clamp(22px, 3.2vw, 34px);padding:18px;">Klik Soal Baru untuk mulai</div>
+            <div class="mg-input-area" id="mm-input-area">
+              <input type="text" id="mm-answer-input" class="text-input" placeholder="Ketik angka jawaban..." autocomplete="off" />
+              <button type="button" class="btn-primary" id="mm-submit-btn">Jawab</button>
+            </div>
+          </div>
+
+          <div class="mg-footer">
+            <button type="button" class="btn-secondary" id="mm-next-btn">▶ Soal Berikutnya</button>
+            <span class="mg-rule-note" id="mm-explanation">Tekan Enter untuk menjawab cepat.</span>
+          </div>
+        </div>
+
+        <!-- LAB E: UNIVERSAL INTERACTIVE STUDIO (Social, Speaking, Feynman, Critical, Solver, Language & Text Analysis) -->
+        <div class="minigame-card" id="lab-social" hidden>
+          <div class="mg-controls">
+            <div class="mg-control-group">
+              <label>Level Lab:</label>
+              <div class="mg-pills" id="soc-level-pills">
+                <button type="button" class="chip-btn active" data-soc-level="Low">Low</button>
+                <button type="button" class="chip-btn" data-soc-level="Medium">Medium</button>
+                <button type="button" class="chip-btn" data-soc-level="Hard">Hard</button>
+              </div>
+            </div>
+            <div class="mg-control-group">
+              <button type="button" class="btn-secondary btn-sm" id="soc-next-btn">🔄 Ganti Tantangan</button>
+              <button type="button" class="btn-ghost btn-sm" id="soc-custom-source-btn" hidden>✍️ Gunakan Teks Sendiri</button>
+            </div>
+          </div>
+
+          <!-- Optional Custom Source Box for Text Analysis Modules -->
+          <div id="soc-custom-box" class="lab-box" hidden style="margin-bottom:14px;">
+            <label style="font-size:13px;font-weight:700;display:block;margin-bottom:6px;">Tempel Kalimat / Paragraf yang Ingin Kamu Bedah di Web Lab:</label>
+            <textarea id="soc-custom-input" class="prompt-textarea" rows="3" placeholder="Tempel teks di sini untuk latihan ekstraksi fakta atomic / kutipan..."></textarea>
+            <button type="button" class="btn-primary btn-sm" id="soc-use-custom-btn" style="margin-top:6px;">Gunakan Teks Ini</button>
+          </div>
+
+          <div class="audio-stage" style="text-align:left;">
+            <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;">
+              <div>
+                <span class="badge badge-xp" id="soc-level-badge">Level Low</span>
+                <strong id="soc-title" style="margin-left:6px;font-size:15px;">Latihan Interaktif</strong>
+              </div>
+              <div style="display:flex;gap:8px;align-items:center;">
+                <button type="button" class="btn-secondary btn-sm" id="soc-timer-btn" hidden>⏱️ Mulai Timer 60d</button>
+                <button type="button" class="btn-secondary btn-sm" id="soc-speak-prompt-btn">🔊 Dengarkan</button>
+                <button type="button" class="btn-cancel-voice btn-sm" id="soc-stop-btn">⏹ Stop</button>
+              </div>
+            </div>
+            <p id="soc-scenario-text" style="font-size:15px;font-weight:600;margin-top:12px;color:#0f172a;white-space:pre-line;line-height:1.6;"></p>
+            <p id="soc-formula-text" style="font-size:13px;color:#1d4ed8;margin-top:10px;font-weight:600;background:#eff6ff;padding:8px 12px;border-radius:8px;"></p>
+
+            <!-- Multi-Turn Conversation Log (for Simulasi Ngobrol 2 Arah & Roleplay) -->
+            <div id="soc-dialogue-log" hidden style="margin-top:12px;display:flex;flex-direction:column;gap:8px;"></div>
+          </div>
+
+          <div class="field-group" style="margin-top:16px;">
+            <div class="label-row">
+              <label for="soc-answer-input" id="soc-answer-label">Ucapkan (via Mic) atau Ketik Jawaban / Analisis Kamu:</label>
+              <button type="button" class="btn-secondary btn-sm" id="soc-mic-btn">🎙️ Bicara Sekarang (Mic)</button>
+            </div>
+            <textarea id="soc-answer-input" class="prompt-textarea" rows="4" placeholder="Susun jawabanmu secara runtut di sini..."></textarea>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;">
+              <button type="button" class="btn-primary" id="soc-check-btn">✓ Evaluasi &amp; Lihat Model Jawaban Terbaik</button>
+            </div>
+          </div>
+
+          <div class="lab-result-box" id="soc-result-box" hidden></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ==================== MODAL: DIAGNOSTIK BICARA & KURIKULUM 14 HARI ==================== -->
+  <div class="modal-backdrop" id="diagnostic-modal" hidden>
+    <div class="modal-card modal-card-lg" style="max-height:88vh;overflow-y:auto;">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;">
+        <h2>🩺 Diagnostik Kesulitan Bicara &amp; Program 14 Hari</h2>
+        <button type="button" class="btn-close-red" id="close-diagnostic-btn" title="Tutup">✕</button>
+      </div>
+      <p style="margin-top:4px;color:#475569;font-size:14px;">
+        Pilih kondisi yang paling sering kamu alami saat berbicara dengan teman atau rekan kerja (boleh pilih lebih dari satu) agar sistem merekomendasikan latihan yang paling tepat:
+      </p>
+
+      <div id="diagnostic-options" style="display:grid;gap:10px;margin:14px 0;">
+        <!-- Rendered by app.js from SPEAKING_DIAGNOSTIC_PROFILES -->
+      </div>
+
+      <div id="diagnostic-result" class="lab-result-box" hidden style="margin-bottom:18px;"></div>
+
+      <hr style="border:none;border-top:1px solid #e2e8f0;margin:18px 0;" />
+
+      <div>
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
+          <div>
+            <h3 style="font-size:16px;">📅 Kurikulum Bertahap 14 Hari (Initiation, Continuation &amp; Structure)</h3>
+            <p style="font-size:13px;color:#64748b;">Centang tahapan yang sudah kamu selesaikan atau klik <strong>Latih Sekarang</strong> untuk langsung membuka modulnya.</p>
+          </div>
+          <span class="badge badge-xp" id="plan-progress-badge">0 / 8 Tahap Selesai</span>
+        </div>
+        <div id="fourteen-day-list" style="display:grid;gap:8px;margin-top:12px;">
+          <!-- Rendered by app.js from FOURTEEN_DAY_SPEAKING_PLAN -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== MODAL: PROFILE ==================== -->
+  <div class="modal-backdrop" id="profile-modal" hidden>
+    <div class="modal-card">
+      <h2>Profil &amp; Preferensi Latihan</h2>
+      <p>Sesuaikan nama dan gaya belajar default kamu.</p>
+
+      <div class="field-group">
+        <label for="profile-name-input">Nama Panggilan</label>
+        <input type="text" id="profile-name-input" class="text-input" placeholder="Contoh: Dio" />
+      </div>
+
+      <div class="field-group">
+        <label for="profile-lang-select">Bahasa Latihan Default</label>
+        <select id="profile-lang-select" class="text-input">
+          <option value="id">🇮🇩 Bahasa Indonesia</option>
+          <option value="en">🇬🇧 English</option>
+          <option value="bilingual">🌐 Campur (Indonesia + English)</option>
+        </select>
+      </div>
+
+      <div class="field-group">
+        <label for="profile-persona-select">Gaya Coach AI Default</label>
+        <select id="profile-persona-select" class="text-input">
+          <option value="bro">😎 Santai &amp; Seru (Gaya Bro / Gen-Z)</option>
+          <option value="socratic">🧠 Socratic Coach (Gali Pemahaman Dalam)</option>
+          <option value="strict">🎯 Tegas &amp; Presisi Tinggi</option>
+          <option value="mentor">🤝 Mentor Eksekutif</option>
+        </select>
+      </div>
+
+      <div class="modal-actions">
+        <button type="button" class="btn-ghost" id="close-profile-btn">Batal</button>
+        <button type="button" class="btn-primary" id="save-profile-btn">Simpan Profil</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== MODAL: CUSTOM MODULE BUILDER ==================== -->
+  <div class="modal-backdrop" id="custom-module-modal" hidden>
+    <div class="modal-card modal-card-lg">
+      <h2>✨ Buat Modul Latihan Sendiri</h2>
+      <p>Tambahkan modul custom sesukamu. Gunakan placeholder <code>{name}</code>, <code>{level}</code>, <code>{topic}</code>, <code>{lang}</code>, <code>{rounds}</code> di dalam template prompt.</p>
+
+      <div class="config-grid-2">
+        <div class="field-group">
+          <label for="cm-title-input">Nama Modul</label>
+          <input type="text" id="cm-title-input" class="text-input" placeholder="Contoh: Audit Laporan Harian HSE" />
+        </div>
+        <div class="field-group">
+          <label for="cm-skill-select">Kategori Skill</label>
+          <select id="cm-skill-select" class="text-input">
+            <option value="memory">🔢 Memory &amp; Focus</option>
+            <option value="recall">📖 Active Recall &amp; Comprehension</option>
+            <option value="listening">🎧 Listening &amp; Audio</option>
+            <option value="speaking">🗣️ Speaking &amp; Social Fluency</option>
+            <option value="logic">⚡ Logic, Math &amp; Text Analysis</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label for="cm-desc-input">Deskripsi Singkat</label>
+        <input type="text" id="cm-desc-input" class="text-input" placeholder="Contoh: Latih merangkum ide pokok dan temuan lapangan dalam 3 kalimat padat." />
+      </div>
+
+      <div class="field-group">
+        <label for="cm-template-input">Template Prompt AI</label>
+        <textarea id="cm-template-input" class="prompt-textarea" rows="6">Halo, namaku {name}.
+Latih aku pada level {level} tentang topik: "{topic}".
+Aturan bahasa: {lang}
+Berikan tantangan bertahap sebanyak {rounds} ronde, evaluasi jawabanku dengan skor 0-100 di tiap ronde!</textarea>
+      </div>
+
+      <div class="modal-actions">
+        <button type="button" class="btn-ghost" id="close-custom-modal-btn">Batal</button>
+        <button type="button" class="btn-primary" id="save-custom-module-btn">Simpan Modul Baru</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="prompts.js" charset="utf-8"></script>
+  <script src="app.js" charset="utf-8"></script>
+</body>
+</html>
