@@ -6,8 +6,6 @@ import 'package:webview_flutter/webview_flutter.dart';
 
 const String kInggriskuFullUrl = 'https://gemini.google.com/share/ac8c037c304e';
 const String kInggriskuShortUrl = 'https://share.gemini.google/ZY0RuOq26UPE';
-const String kSavedEmail = 'diofavianrch@gmail.com';
-const String kSavedPass = 'jagospeaking';
 const String kChromeMobileUA =
     'Mozilla/5.0 (Linux; Android 14; Mobile) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Mobile Safari/537.36';
 const MethodChannel _permChannel =
@@ -59,7 +57,6 @@ class _BrainForgeHubPageState extends State<BrainForgeHubPage> {
 
   // Pengaturan terpisah khusus Inggrisku.AI
   bool _hideGeminiWrapper = true;
-  bool _autoFillLogin = true;
   bool _useShortUrl = false;
 
   String get _currentInggriskuUrl =>
@@ -189,9 +186,6 @@ class _BrainForgeHubPageState extends State<BrainForgeHubPage> {
             }
             if (_hideGeminiWrapper) {
               _injectFullscreenCanvasScript();
-            }
-            if (_autoFillLogin) {
-              _tryAutofillInggriskuLogin();
             }
           },
           onNavigationRequest: (NavigationRequest request) {
@@ -373,38 +367,6 @@ class _BrainForgeHubPageState extends State<BrainForgeHubPage> {
     } catch (_) {}
   }
 
-  Future<void> _tryAutofillInggriskuLogin() async {
-    try {
-      await _inggriskuController.runJavaScript('''
-        (function() {
-          function fillInputs(doc) {
-            if (!doc) return;
-            var emailEl = doc.querySelector('input[type="email"], input[name*="email" i], input[placeholder*="email" i]');
-            var passEl = doc.querySelector('input[type="password"], input[name*="pass" i], input[placeholder*="pass" i]');
-            function setVal(el, val) {
-              if (!el || el.value) return;
-              var setter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value')?.set;
-              if (setter) setter.call(el, val); else el.value = val;
-              el.dispatchEvent(new Event('input', { bubbles: true }));
-              el.dispatchEvent(new Event('change', { bubbles: true }));
-            }
-            setVal(emailEl, ${jsonEncode(kSavedEmail)});
-            setVal(passEl, ${jsonEncode(kSavedPass)});
-          }
-          try { fillInputs(document); } catch (_) {}
-          try {
-            var frames = document.querySelectorAll('iframe');
-            for (var i = 0; i < frames.length; i++) {
-              try {
-                if (frames[i].contentDocument) fillInputs(frames[i].contentDocument);
-              } catch (_) {}
-            }
-          } catch (_) {}
-        })();
-      ''');
-    } catch (_) {}
-  }
-
   Future<bool> _handleBrainForgeInnerBack() async {
     try {
       final result = await _brainForgeController.runJavaScriptReturningResult('''
@@ -527,7 +489,6 @@ class _BrainForgeHubPageState extends State<BrainForgeHubPage> {
       MaterialPageRoute(
         builder: (_) => _DualSettingsScreen(
           hideGeminiWrapper: _hideGeminiWrapper,
-          autoFillLogin: _autoFillLogin,
           useShortUrl: _useShortUrl,
           initialMicGranted: micGranted,
           onToggleHideWrapper: (val) {
@@ -536,11 +497,16 @@ class _BrainForgeHubPageState extends State<BrainForgeHubPage> {
               _inggriskuController.reload();
             }
           },
-          onToggleAutoFill: (val) {
-            setState(() => _autoFillLogin = val);
-          },
           onToggleShortUrl: (val) {
             setState(() => _useShortUrl = val);
+            if (_inggriskuLoadedOnce) {
+              _inggriskuController.loadRequest(Uri.parse(_currentInggriskuUrl));
+            }
+          },
+          onClearInggriskuSession: () async {
+            await WebViewCookieManager().clearCookies();
+            await _inggriskuController.clearLocalStorage();
+            await _inggriskuController.clearCache();
             if (_inggriskuLoadedOnce) {
               _inggriskuController.loadRequest(Uri.parse(_currentInggriskuUrl));
             }
@@ -887,12 +853,11 @@ class _BrainForgeHubPageState extends State<BrainForgeHubPage> {
 
 class _DualSettingsScreen extends StatefulWidget {
   final bool hideGeminiWrapper;
-  final bool autoFillLogin;
   final bool useShortUrl;
   final bool initialMicGranted;
   final ValueChanged<bool> onToggleHideWrapper;
-  final ValueChanged<bool> onToggleAutoFill;
   final ValueChanged<bool> onToggleShortUrl;
+  final Future<void> Function() onClearInggriskuSession;
   final Future<bool> Function() onRequestMicPermission;
   final VoidCallback onOpenAppSettings;
   final VoidCallback onOpenBrainForgeProfile;
@@ -903,12 +868,11 @@ class _DualSettingsScreen extends StatefulWidget {
 
   const _DualSettingsScreen({
     required this.hideGeminiWrapper,
-    required this.autoFillLogin,
     required this.useShortUrl,
     required this.initialMicGranted,
     required this.onToggleHideWrapper,
-    required this.onToggleAutoFill,
     required this.onToggleShortUrl,
+    required this.onClearInggriskuSession,
     required this.onRequestMicPermission,
     required this.onOpenAppSettings,
     required this.onOpenBrainForgeProfile,
@@ -924,30 +888,15 @@ class _DualSettingsScreen extends StatefulWidget {
 
 class _DualSettingsScreenState extends State<_DualSettingsScreen> {
   late bool _hideWrapper;
-  late bool _autoFill;
   late bool _shortUrl;
   late bool _micGranted;
-  bool _showPassword = false;
 
   @override
   void initState() {
     super.initState();
     _hideWrapper = widget.hideGeminiWrapper;
-    _autoFill = widget.autoFillLogin;
     _shortUrl = widget.useShortUrl;
     _micGranted = widget.initialMicGranted;
-  }
-
-  Future<void> _copy(String label, String value) async {
-    await Clipboard.setData(ClipboardData(text: value));
-    if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('✅ $label disalin ke clipboard!'),
-        duration: const Duration(seconds: 2),
-        behavior: SnackBarBehavior.floating,
-      ),
-    );
   }
 
   @override
@@ -1046,36 +995,29 @@ class _DualSettingsScreenState extends State<_DualSettingsScreen> {
                   onTap: () => widget.onOpenAppSettings(),
                 ),
                 const Divider(height: 1),
-                ListTile(
-                  leading: const Icon(Icons.email_outlined, color: Color(0xFF283593)),
-                  title: const Text('Email Login Tersimpan', style: TextStyle(fontSize: 13, color: Color(0xFF64748B))),
-                  subtitle: const Text(kSavedEmail, style: TextStyle(fontWeight: FontWeight.w700, fontSize: 14.5)),
-                  trailing: FilledButton.tonal(
-                    onPressed: () => _copy('Email', kSavedEmail),
-                    child: const Text('Salin'),
+                const ListTile(
+                  leading: Icon(Icons.verified_user_outlined, color: Color(0xFF283593)),
+                  title: Text('Akun Inggrisku.AI Pribadi', style: TextStyle(fontWeight: FontWeight.w600)),
+                  subtitle: Text(
+                    'Masuk menggunakan akun Inggrisku.AI milik Anda sendiri langsung di halaman login Inggrisku.AI.',
                   ),
                 ),
                 const Divider(height: 1),
                 ListTile(
-                  leading: const Icon(Icons.lock_outline_rounded, color: Color(0xFF283593)),
-                  title: const Text('Password Tersimpan', style: TextStyle(fontSize: 13, color: Color(0xFF64748B))),
-                  subtitle: Text(
-                    _showPassword ? kSavedPass : '••••••••••••',
-                    style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 14.5),
-                  ),
-                  trailing: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      IconButton(
-                        icon: Icon(_showPassword ? Icons.visibility_off : Icons.visibility, size: 20),
-                        onPressed: () => setState(() => _showPassword = !_showPassword),
+                  leading: const Icon(Icons.logout_rounded, color: Color(0xFFDC2626)),
+                  title: const Text('Reset Sesi / Logout Inggrisku.AI', style: TextStyle(fontWeight: FontWeight.w600)),
+                  subtitle: const Text('Hapus cookie & sesi login di perangkat ini untuk ganti akun'),
+                  onTap: () async {
+                    await widget.onClearInggriskuSession();
+                    if (!context.mounted) return;
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('✅ Sesi login Inggrisku.AI telah direset.'),
+                        duration: Duration(seconds: 2),
+                        behavior: SnackBarBehavior.floating,
                       ),
-                      FilledButton.tonal(
-                        onPressed: () => _copy('Password', kSavedPass),
-                        child: const Text('Salin'),
-                      ),
-                    ],
-                  ),
+                    );
+                  },
                 ),
                 const Divider(height: 1),
                 SwitchListTile(
@@ -1086,17 +1028,6 @@ class _DualSettingsScreenState extends State<_DualSettingsScreen> {
                   onChanged: (val) {
                     setState(() => _hideWrapper = val);
                     widget.onToggleHideWrapper(val);
-                  },
-                ),
-                const Divider(height: 1),
-                SwitchListTile(
-                  secondary: const Icon(Icons.auto_fix_high_rounded, color: Color(0xFF283593)),
-                  title: const Text('Coba Auto-Isi Login Otomatis', style: TextStyle(fontWeight: FontWeight.w600)),
-                  subtitle: const Text('Otomatis isi form email/password bila halaman login muncul'),
-                  value: _autoFill,
-                  onChanged: (val) {
-                    setState(() => _autoFill = val);
-                    widget.onToggleAutoFill(val);
                   },
                 ),
                 const Divider(height: 1),
