@@ -237,6 +237,7 @@ const INTERACTION_BADGE_MAP = {
   'grammar-speaking': { label: '🎙️ Voice', cls: 'mode-voice' },
   'roleplay-mastery': { label: '🎙️ Voice', cls: 'mode-voice' },
   'impromptu-speaking': { label: '🎙️ Voice', cls: 'mode-voice' },
+  'story-echo-retell': { label: '🎙️ Voice', cls: 'mode-voice' },
   'memory-span': { label: '🎙️💬 Both (Voice)', cls: 'mode-both-voice' },
   'story-chain-memory': { label: '🎙️💬 Both (Voice)', cls: 'mode-both-voice' },
   'conversation-initiation': { label: '🎙️💬 Both (Voice)', cls: 'mode-both-voice' },
@@ -255,6 +256,7 @@ const INTERACTION_BADGE_MAP = {
 const STAR_PRIORITY_MAP = {
   'memory-span': 5,
   'story-chain-memory': 5,
+  'story-echo-retell': 5,
   'listening-practice': 5,
   'recall-percakapan': 5,
   'structured-speaking': 5,
@@ -1366,10 +1368,76 @@ document.querySelectorAll('#au-level-pills .chip-btn').forEach((btn) => {
   });
 });
 
+const STORY_ECHO_SCRIPTS = {
+  Low: [
+    {
+      title: 'Rutinitas Pagi Andi di Kamar Mandi (3× Putar)',
+      lang: 'id-ID',
+      script:
+        'Pagi hari, Andi mengambil sabun untuk mandi. Setelah memakai sabun, Andi mengambil shampo untuk mencuci rambutnya. Namun, karena shampo yang digunakan terlalu banyak, Andi membutuhkan lebih banyak air untuk membilas rambutnya. Setelah selesai membilas rambut, Andi mengisi bak mandi dengan air. Sebelum berangkat kerja, Andi mengambil sikat gigi untuk membersihkan giginya.',
+      keywords: ['sabun', 'shampo', 'terlalu banyak', 'air', 'bak mandi', 'sikat gigi'],
+      facts: [
+        'Andi mengambil sabun untuk mandi',
+        'Memakai shampo untuk mencuci rambut, tetapi terlalu banyak',
+        'Membutuhkan lebih banyak air untuk membilas',
+        'Mengisi bak mandi dengan air',
+        'Mengambil sikat gigi sebelum berangkat kerja',
+      ],
+    },
+    {
+      title: 'Nongkrong di Taman Bersama Teman (3× Putar)',
+      lang: 'id-ID',
+      script:
+        'Sore itu, Dika mengajak dua temannya duduk santai di bangku taman. Setelah mengobrol sebentar, mereka membeli es kopi dari pedagang keliling. Namun angin tiba-tiba bertiup kencang sehingga gelas kopi milik Dika hampir tumpah. Mereka pun segera pindah ke gazebo taman agar lebih aman. Sebelum pulang ke rumah, mereka membuang semua gelas kosong ke tempat sampah.',
+      keywords: ['taman', 'es kopi', 'angin', 'gazebo', 'tempat sampah'],
+      facts: [
+        'Dika dan dua temannya duduk di bangku taman',
+        'Membeli es kopi dari pedagang keliling',
+        'Angin kencang hampir menumpahkan kopi',
+        'Pindah ke gazebo taman',
+        'Membuang gelas kosong ke tempat sampah sebelum pulang',
+      ],
+    },
+  ],
+  Medium: [
+    {
+      title: 'Kejadian Pagi Sebelum Rapat Kantor (3× Putar)',
+      lang: 'id-ID',
+      script:
+        'Pagi itu Rina membawa payung karena langit sudah mendung sejak subuh. Sesampainya di lobi kantor, ia membeli kopi panas agar lebih fokus menghadapi rapat. Namun sepuluh menit sebelum presentasi dimulai, printer ruang kerja mendadak macet karena kertas tersangkut. Sambil menunggu teknisi datang, Rina memakan roti yang ia bawa dari rumah. Setelah printer kembali normal, ia mengambil kunci ruang arsip lalu naik lift menuju lantai lima.',
+      keywords: ['payung', 'kopi', 'printer', 'macet', 'roti', 'lift', 'lantai lima'],
+      facts: [
+        'Rina membawa payung karena mendung',
+        'Membeli kopi panas di lobi',
+        'Printer macet 10 menit sebelum presentasi',
+        'Makan roti sambil menunggu teknisi',
+        'Mengambil kunci ruang arsip dan naik lift ke lantai lima',
+      ],
+    },
+  ],
+  Hard: [
+    {
+      title: 'Perjalanan Dinas & Kejadian Tak Terduga (3× Putar)',
+      lang: 'id-ID',
+      script:
+        'Menjelang keberangkatan pukul tujuh pagi, Sinta mengecek paspor dan tiket di dalam tas ranselnya. Saat keluar rumah, ia baru sadar ban motornya kempes sehingga harus segera memesan taksi online. Di tengah jalan menuju stasiun, hujan turun sangat deras dan membuat jalanan macet selama dua puluh menit. Untungnya, kereta yang ia naiki sempat tertunda sepuluh menit sehingga Sinta tidak tertinggal. Sesampainya di kota tujuan, ia langsung minum teh hangat dan menghubungi tim proyek untuk konfirmasi jadwal rapat pukul dua siang.',
+      keywords: ['tujuh', 'paspor', 'ban', 'taksi', 'hujan', 'dua puluh', 'sepuluh', 'teh', 'dua siang'],
+      facts: [
+        'Berangkat pukul 07.00 membawa paspor dan tiket',
+        'Ban motor kempes sehingga memesan taksi online',
+        'Hujan deras menyebabkan macet 20 menit',
+        'Kereta tertunda 10 menit sehingga tidak ketinggalan',
+        'Minum teh hangat dan konfirmasi rapat pukul 14.00',
+      ],
+    },
+  ],
+};
+
 function loadAudioScenario() {
   stopSpeech();
   const isDialogue = currentModule.webLabType === 'dialogue';
-  const bank = isDialogue ? DIALOGUE_SCRIPTS : LISTENING_SCRIPTS;
+  const isStoryEcho = currentModule.id === 'story-echo-retell';
+  const bank = isStoryEcho ? STORY_ECHO_SCRIPTS : isDialogue ? DIALOGUE_SCRIPTS : LISTENING_SCRIPTS;
   const rawList = bank[auLevel] || bank.Low;
   const prefPrefix = currentLang === 'en' ? 'en' : 'id';
   const langFiltered = rawList.filter((item) => (item.lang || '').toLowerCase().startsWith(prefPrefix));
@@ -1379,7 +1447,9 @@ function loadAudioScenario() {
   auPlayCount = 0;
 
   auTitle.textContent = auCurrentItem.title;
-  auInstruction.textContent = isDialogue
+  auInstruction.textContent = isStoryEcho
+    ? 'Klik Putar Audio: AI akan membacakan 1 paragraf cerita utuh sebanyak 3× berturut-turut, lalu ceritakan ulang alurnya secara bebas dengan kalimatmu sendiri!'
+    : isDialogue
     ? 'Klik Putar Audio untuk mendengarkan percakapan 2 orang (Pria & Wanita), lalu ceritakan kembali masalah awal, perubahan rencana, dan kesepakatan akhirnya.'
     : 'Klik Putar Audio untuk mendengarkan monolog/briefing, lalu tuliskan informasi atomic (fakta, angka, alasan) yang kamu tangkap.';
   if (auPlaysLeftEl) {
@@ -1424,6 +1494,9 @@ document.getElementById('au-play-btn').addEventListener('click', () => {
       u.pitch = isMale ? 0.82 : 1.15;
       window.speechSynthesis.speak(u);
     });
+  } else if (currentModule.id === 'story-echo-retell') {
+    const repeatScript = `${auCurrentItem.script} ... Ulang lagi. ... ${auCurrentItem.script} ... Ulang lagi. ... ${auCurrentItem.script}`;
+    speakText(repeatScript, auCurrentItem.lang || 'id-ID', rate);
   } else {
     speakText(auCurrentItem.script, auCurrentItem.lang || 'id-ID', rate);
   }

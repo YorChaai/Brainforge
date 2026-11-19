@@ -183,6 +183,53 @@ const DEFAULT_MODULES = [
     ],
   },
   {
+    id: 'story-echo-retell',
+    category: 'core',
+    skill: 'listening',
+    title: 'Story Echo & Retell (Dengar 3× & Ceritakan Ulang)',
+    icon: '🎙️',
+    color: 'linear-gradient(135deg, #8b5cf6, #ec4899)',
+    tag: '3× Audio Story + Retell',
+    description:
+      'Dengarkan 1 paragraf cerita utuh yang dibacakan 3 kali berturut-turut, lalu ceritakan ulang alur dan detailnya secara bebas dengan kalimatmu sendiri.',
+    webLabType: 'listening',
+    topicMode: 'context',
+    topicLabel: 'Tema Cerita Pendek (Opsional)',
+    topicPlaceholder: 'Contoh: Rutinitas pagi Andi di kamar mandi, insiden kecil di kantor, perjalanan akhir pekan...',
+    defaultInteraction: 'voice',
+    uniqueMechanic:
+      'Pembacaan 1 paragraf cerita berantai secara penuh sebanyak 3× berturut-turut (jeda "Ulang lagi") → pemain menceritakan ulang bebas dengan kata-kata sendiri.',
+    levelHints: {
+      Low: '1 paragraf pendek (4–5 kalimat sebab-akibat berurutan) dibacakan 3× → ceritakan ulang inti & urutannya dengan kalimatmu sendiri',
+      Medium: '1 paragraf menengah (6–7 kalimat dengan 1–2 kejadian tak terduga/ralat) dibacakan 3× → ceritakan ulang lengkap beserta alasannya',
+      Hard: '1 paragraf padat (8–10 kalimat lintas situasi + detail angka/waktu & twist) dibacakan 3× → ceritakan ulang utuh & akurat tanpa terbalik',
+    },
+    levelSpecs: {
+      Low: {
+        storyLoad: '1 paragraf pendek terdiri dari 4–5 kalimat sebab-akibat yang jelas dan akrab (seperti contoh: "Pagi hari, Andi mengambil sabun... Setelah memakai sabun... Namun... Setelah selesai... Sebelum berangkat kerja...").',
+        retellRule: 'Ceritakan ulang alur cerita dari awal sampai akhir secara bebas dengan kalimatmu sendiri (tidak harus persis kata demi kata, yang penting urutan & maknanya benar).',
+        focusCheck: 'Urutan 4–5 kejadian kunci + hubungan sebab-akibat dasarnya.',
+      },
+      Medium: {
+        storyLoad: '1 paragraf menengah berisi 6–7 kalimat dengan 1 masalah tak terduga atau perubahan rencana di tengah cerita.',
+        retellRule: 'Ceritakan ulang alur lengkap termasuk masalah yang muncul, penyebabnya, dan solusi akhirnya dengan bahasa sendiri.',
+        focusCheck: 'Urutan 6–7 kejadian + detail alasan/perubahan di tengah cerita.',
+      },
+      Hard: {
+        storyLoad: '1 paragraf padat berisi 8–10 kalimat dengan detail waktu/angka, sebab-akibat bertingkat, dan 1 twist di akhir.',
+        retellRule: 'Ceritakan ulang seluruh alur cerita secara runtut, lengkap dengan detail angka/waktu dan twist akhirnya tanpa ada yang terlewat atau tertukar.',
+        focusCheck: 'Ketepatan urutan kronologis, detail spesifik, serta kejelasan penyampaian lisan.',
+      },
+    },
+    suggestions: [
+      'Rutinitas pagi Andi di kamar mandi (sabun, shampo, air, bak mandi, sikat gigi)',
+      'Kejadian lucu saat memasak sarapan sebelum berangkat kerja',
+      'Perjalanan naik motor/KRL saat hujan mendadak di pagi hari',
+      'Kejadian kecil di kantor atau lapangan proyek HSE',
+      'Belanja di pasar atau nongkrong santai bareng teman di taman',
+    ],
+  },
+  {
     id: 'active-recall',
     category: 'core',
     skill: 'recall',
@@ -1012,8 +1059,70 @@ const DEFAULT_MODULES = [
   },
 ];
 
-// === SUBKATEGORI & TOPIK EKSKLUSIF SPESIFIK PER GAME (20 GAME × 3 SUBKATEGORI × 6 TOPIK = 360 TOPIK KHUSUS) ===
+// === SUBKATEGORI & TOPIK EKSKLUSIF SPESIFIK PER GAME (21 GAME × 3 SUBKATEGORI × 6 TOPIK = 378 TOPIK KHUSUS) ===
 const MODULE_EXCLUSIVE_SUBCATEGORIES = {
+  'story-echo-retell': [
+    {
+      nameId: 'Cerita Aktivitas Harian & Rumah',
+      nameEn: 'Daily Routines & Home Stories',
+      topicsId: [
+        'Rutinitas pagi Andi di kamar mandi (sabun, shampo terlalu banyak, bilas air, isi bak mandi, sikat gigi)',
+        'Menyiapkan sarapan cepat saat hampir kesiangan berangkat kerja',
+        'Mencari kunci motor yang terselip sebelum keluar rumah',
+        'Membereskan meja kerja dan menyeduh kopi saat hujan sore',
+        'Belanja kebutuhan mingguan di minimarket dengan daftar mendadak berubah',
+        'Merawat tanaman di halaman lalu membersihkan peralatan berkebun',
+      ],
+      topicsEn: [
+        'Andi’s morning bathroom routine (soap, too much shampoo, rinsing with water, bathtub, toothbrush)',
+        'Making a quick breakfast when running late for work',
+        'Looking for misplaced motorbike keys before leaving home',
+        'Tidying up the desk and brewing coffee during an afternoon rain',
+        'Quick grocery run when the shopping list suddenly changes',
+        'Watering garden plants and cleaning up the tools afterward',
+      ],
+    },
+    {
+      nameId: 'Cerita Nongkrong, Jalan-Jalan & Sosial',
+      nameEn: 'Hangouts, Travel & Social Stories',
+      topicsId: [
+        'Nongkrong santai bersama teman di taman lalu pindah mencari tempat berteduh',
+        'Salah naik peron KRL saat perjalanan menuju tempat janjian',
+        'Mencoba warung soto lokal baru bersama rekan kerja saat jam makan siang',
+        'Mengembalikan barang teman yang tertinggal di kafe sebelum pulang',
+        'Bermain bulu tangkis sore di lapangan komplek dengan raket pinjaman',
+        'Menunggu pesanan kopi sambil mengobrol dengan kenalan lama',
+      ],
+      topicsEn: [
+        'Hanging out with friends at the park before moving under shelter',
+        'Taking the wrong train platform on the way to meet friends',
+        'Trying a hidden local soto stall with coworkers at lunch',
+        'Returning a friend’s forgotten item at a cafe before heading home',
+        'Playing evening badminton at the neighborhood court with a borrowed racket',
+        'Waiting for coffee orders while catching up with an old acquaintance',
+      ],
+    },
+    {
+      nameId: 'Cerita Kejadian Kerja & Lapangan HSE',
+      nameEn: 'Workplace & Field Incident Stories',
+      topicsId: [
+        'Penanganan kebocoran kecil pipa air di area gudang sebelum briefing',
+        'Printer kantor mendadak macet tepat 10 menit sebelum rapat dimulai',
+        'Pengecekan APD dan temuan kabel terkelupas saat inspeksi pagi',
+        'Pergantian jadwal pengiriman logistik karena truk datang lebih awal',
+        'Lampu ruang rapat padam sebentar lalu dialihkan ke ruang sebelah',
+        'Koordinasi cepat tim lapangan saat hujan deras turun tiba-tiba',
+      ],
+      topicsEn: [
+        'Handling a minor water pipe leak in the warehouse before briefing',
+        'Office printer jamming 10 minutes before a presentation meeting',
+        'PPE check and spotting a frayed cable during morning inspection',
+        'Logistics schedule shift because the delivery truck arrived early',
+        'Meeting room power flicker forcing a quick move to the next room',
+        'Rapid field team coordination when heavy rain hits unexpectedly',
+      ],
+    },
+  ],
   'story-chain-memory': [
     {
       nameId: 'Rutinitas Harian & Situasi Rumah',
@@ -5167,6 +5276,20 @@ function adaptTopicToGameMechanic(mod, rawTopic, idx, isEn) {
         'Rangkai Kata Kunci Jadi Cerita: ',
       ][v] + rawTopic;
 
+    case 'story-echo-retell':
+      if (isEn) {
+        return [
+          '3× Story Echo & Free Retell: ',
+          'Auditory Story Sequence & Retelling: ',
+          'Listen 3× & Retell in Your Own Words: ',
+        ][v] + rawTopic;
+      }
+      return [
+        'Cerita Utuh 3× & Ceritakan Ulang: ',
+        'Simak Alur Cerita 3× (Free Retell): ',
+        'Rekam Jejak Cerita Sebab-Akibat 3×: ',
+      ][v] + rawTopic;
+
     case 'active-recall':
       if (isEn) {
         return [
@@ -6511,6 +6634,54 @@ Setelah ${safeName} menjawab:
 
 ## 📋 MULAI SESI SEKARANG
 Sapa **${safeName}** dengan singkat, jelaskan alur **Kata → Kalimat Per Kata → 1 Paragraf Utuh**, lalu mulai sesuai aturan mode interaksi di atas!`;
+    }
+
+    case 'story-echo-retell': {
+      const deliveryNote = isVoice
+        ? `**ATURAN WAJIB 3× PEMBACAAN PARAGRAF UTUH**:
+  - Bacakan **1 PARAGRAF CERITA UTUH YANG SAMA** sebanyak **3 KALI BERTURUT-TURUT** secara lisan tanpa memotong atau memberi daftar kata kunci terpisah!
+  - Gunakan jeda singkat bertuliskan/berbunyi **_"ulang lagi"_** di antara pengulangan ke-1, ke-2, dan ke-3.
+  - Contoh format penyampaian di Ronde:
+    _"[Paragraf cerita utuh kalimat 1 sampai selesai] ... ulang lagi ... [Paragraf cerita utuh yang sama] ... ulang lagi ... [Paragraf cerita utuh yang sama]. Sekarang coba kamu ceritakan ulang apa saja yang tadi terjadi dengan kalimatmu sendiri!"_`
+        : `Tampilkan 1 paragraf cerita utuh sebanyak 3× di blok kutipan (atau berikan penanda _"ulang lagi"_), lalu tambahkan **8–10 baris pembatas visual** di bawahnya agar ${safeName} berlatih menceritakan ulang dari memori tanpa menyontek teks.`;
+
+      return `${masterHeader}
+
+## 📐 SPESIFIKASI KHUSUS LEVEL ${level.toUpperCase()} (STORY ECHO & RETELL — DENGAR 3× & CERITAKAN ULANG)
+
+> [!IMPORTANT]
+> **Mekanisme Inti Game Ini:**
+> Kamu langsung membacakan **1 paragraf cerita berantai sebab-akibat secara penuh sebanyak 3× berturut-turut** (bukan daftar kata lepas!), lalu **${safeName}** bebas menceritakan ulang isi ceritanya dengan kata-kata sendiri!
+>
+> **Contoh Gaya Cerita yang Kamu Bacakan 3× (Level Low):**
+> _"Pagi hari, Andi mengambil sabun untuk mandi. Setelah memakai sabun, Andi mengambil shampo untuk mencuci rambutnya. Namun, karena shampo yang digunakan terlalu banyak, Andi membutuhkan lebih banyak air untuk membilas rambutnya. Setelah selesai membilas rambut, Andi mengisi bak mandi dengan air. Sebelum berangkat kerja, Andi mengambil sikat gigi untuk membersihkan giginya."_
+> **→ ulang lagi → [bacakan paragraf yang sama] → ulang lagi → [bacakan paragraf yang sama]**
+
+1. **Beban Cerita**: ${spec.storyLoad}
+2. **Tugas Pemain (Free Retell)**: ${spec.retellRule}
+3. **Fokus Audit**: ${spec.focusCheck}
+
+---
+
+## 🏛️ PROTOKOL PERMAINAN (${rounds} RONDE BERTAHAP)
+
+### Langkah 1 — Bacakan 1 Paragraf Cerita Utuh Sebanyak 3×
+- Buat 1 paragraf cerita pendek yang hidup, jelas alur sebab-akibatnya, dan **berbeda di setiap ronde** seputar tema **"${safeTopic}"** sesuai **Level ${level}**.
+- ${deliveryNote}
+- **DILARANG** memberi daftar poin/kata kunci atau pertanyaan pilihan ganda dulu — biarkan ${safeName} bebas berbicara/menceritakan ulang apa saja yang ia ingat!
+- **Berhenti di sini dan tunggu cerita ulang ${safeName}.**
+
+### Langkah 2 — Audit Alur Retelling & Detail yang Tertangkap
+Setelah ${safeName} menceritakan ulang:
+1. **📊 Skor Retelling (0–100)**: Nilai ketepatan urutan kronologis kejadian, kelengkapan poin sebab-akibat, dan kelancaran penyampaian dengan kata-kata sendiri.
+2. **✅ Tertangkap vs ⚠️ Terlewat/Tertukar**: Sebutkan secara singkat poin mana yang sudah tepat diingat ${safeName} dan detail mana yang terlewat atau terbalik urutannya.
+3. **🗣️ Koreksi Kalimat (Bila Ada)**: Jika ada kalimat yang kurang jelas atau fakta yang terlewat${isVoice ? ', bantu rapikan 1 kalimat ringkas lalu **minta ' + safeName + ' mengucapkan ulang kalimat perbaikan tersebut** sebelum lanjut!' : ', berikan 1 versi ringkas yang rapi.'}
+4. Langsung lanjutkan ke **Ronde Berikutnya** (hingga tuntas ${rounds} ronde)!
+
+---
+
+## 📋 MULAI SESI SEKARANG
+Sapa **${safeName}** dengan singkat, jelaskan bahwa kamu akan membacakan 1 cerita pendek **3 kali berturut-turut** lalu ${safeName} tinggal menceritakan ulang bebas pakai kalimatnya sendiri, lalu ikuti aturan pembukaan di atas!`;
     }
 
     case 'active-recall': {

@@ -698,7 +698,7 @@ class _BrainForgeHubPageState extends State<BrainForgeHubPage> {
                   const SizedBox(height: 44),
                   _AppLaunchCard(
                     label: 'BRAINFORGE.AI',
-                    subtitle: '20 Game Otak, Bicara & Analisis Teks',
+                    subtitle: '21 Game Otak, Bicara & Analisis Teks',
                     icon: Icons.psychology_rounded,
                     color: const Color(0xFF1565C0),
                     onTap: _openBrainForge,
@@ -922,7 +922,7 @@ class _DualSettingsScreenState extends State<_DualSettingsScreen> {
           _buildSectionHeader(
             icon: Icons.psychology_rounded,
             title: 'Pengaturan BrainForge.AI',
-            subtitle: '20 Game Kognitif, Bicara & Analisis Teks',
+            subtitle: '21 Game Kognitif, Bicara & Analisis Teks',
             color: const Color(0xFF1565C0),
           ),
           Card(
