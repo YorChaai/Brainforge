@@ -1,4 +1,4 @@
-# Panduan & Analisis Kemampuan 19 Games BrainForge.AI Pro
+# Panduan & Analisis Kemampuan 21 Games BrainForge.AI Pro
 
 *(Diurutkan dari Prioritas **★★★★★ Bintang 5** sampai **★☆☆☆☆ Bintang 1** sesuai Filter Aplikasi)*
 
@@ -10,33 +10,35 @@ Setiap game di BrainForge.AI Pro memiliki **2 cara main**:
 
 ---
 
-## Ringkasan Cepat 19 Games (Urutan Bintang 5 → 1)
+## Ringkasan Cepat 21 Games (Urutan Bintang 5 → 1)
 
 | No |    Bintang    | Nama Game                                    | Mode Utama       | Kemampuan Utama yang Dilatih                                               |
 | :-: | :------------: | :------------------------------------------- | :--------------- | :------------------------------------------------------------------------- |
 | 1 | `★★★★★` | **Memory Span Matrix**                 | `Both (Voice)` | Menahan urutan angka/kata/audio di memori kerja (`3× Ulang`)            |
-| 2 | `★★★★★` | **Listening Practice**                 | `Voice`        | Menangkap fakta, angka, & ralat dari cerita/briefing lisan (`3× Ulang`) |
-| 3 | `★★★★★` | **Recall Percakapan**                  | `Voice`        | Menyimak dialog 2 orang & melacak perubahan rencana (`3× Ulang`)        |
-| 4 | `★★★★★` | **Structured Speaking**                | `Voice`        | Bicara runtut anti-*blank* dengan pola P-A-C & P-P-A-K                   |
-| 5 | `★★★★★` | **Conversation Initiation**            | `Both (Voice)` | Membuka & ikut *nimbrung* obrolan secara natural                         |
-| 6 | `★★★★★` | **Conversation Continuation**          | `Both (Voice)` | Menyambung obrolan agar tidak buntu (*dead air*)                         |
-| 7 | `★★★★★` | **Simulasi Ngobrol 2 Arah**            | `Voice`        | Sparring dialog multi-putaran dengan audit 3 indikator sosial              |
-| 8 | `★★★★☆` | **Grammar in Action & Speaking Drill** | `Voice`        | Paham pola grammar santai + drill tanya-jawab lisan & ucap ulang           |
-| 9 | `★★★★☆` | **Active Vocabulary & Story Weaver**   | `Both (Text)`  | Menguasai kosakata/idiom lewat cerita, menulis, & speaking                 |
-| 10 | `★★★★☆` | **Impromptu 1-Minute Pitch (PREP)**    | `Voice`        | Bicara spontan 60 detik dengan kerangka P-R-E-P + Q&A dadakan              |
-| 11 | `★★★★☆` | **Active Recall Reader**               | `Both (Text)`  | Membaca teks padat lalu menjelaskan ulang tanpa melihat                    |
-| 12 | `★★★☆☆` | **Immersive Character Roleplay**       | `Voice`        | Berakting dialog bersama tokoh (*HRD, Barista, Auditor, Klien*)          |
-| 13 | `★★★☆☆` | **Feynman Concept Deconstructor**      | `Both (Text)`  | Menjelaskan konsep rumit secara sederhana, bebas jargon, + analogi         |
-| 14 | `★★★☆☆` | **First-Principles Case Solver**       | `Both (Text)`  | Membedah akar masalah (*5-Whys*) + menghadapi *Plot Twist*             |
-| 15 | `★★☆☆☆` | **Critical Thinking & Fallacy Hunter** | `Both (Text)`  | Menemukan sesat pikir, asumsi tersembunyi, & *Steelmanning*              |
-| 16 | `★★☆☆☆` | **Mental Math & Pattern Blitz**        | `Both (Text)`  | Hitung cepat di luar kepala, persentase, & deret logika angka              |
-| 17 | `★☆☆☆☆` | **Ekstraksi Fakta Atomic**             | `Text`         | Memecah teks menjadi fakta tunggal (*1 fakta = 1 poin*, tanpa opini)     |
-| 18 | `★☆☆☆☆` | **Analisis Teks & Bukti Kutipan**      | `Text`         | Ekstraksi fakta + wajib menyertakan kutipan kalimat asli (`"..."`)       |
-| 19 | `★☆☆☆☆` | **Rekonstruksi Transkrip 5 Pilar**     | `Text`         | Mengubah transkrip mentah menjadi narasi utuh & modul 5 pilar              |
+| 2 | `★★★★★` | **Story Chain Memory (Rantai Cerita)** | `Both (Voice)` | Merangkai kata kunci → kalimat berurutan → 1 paragraf cerita utuh      |
+| 3 | `★★★★★` | **Story Echo & Retell (Dengar 3×)**    | `Voice`        | Menyimak 1 paragraf cerita utuh `3×` lalu menceritakan ulang bebas      |
+| 4 | `★★★★★` | **Listening Practice**                 | `Voice`        | Menangkap fakta, angka, & ralat dari cerita/briefing lisan (`3× Ulang`) |
+| 5 | `★★★★★` | **Recall Percakapan**                  | `Voice`        | Menyimak dialog 2 orang & melacak perubahan rencana (`3× Ulang`)        |
+| 6 | `★★★★★` | **Structured Speaking**                | `Voice`        | Bicara runtut anti-*blank* dengan pola P-A-C & P-P-A-K                   |
+| 7 | `★★★★★` | **Conversation Initiation**            | `Both (Voice)` | Membuka & ikut *nimbrung* obrolan secara natural                         |
+| 8 | `★★★★★` | **Conversation Continuation**          | `Both (Voice)` | Menyambung obrolan agar tidak buntu (*dead air*)                         |
+| 9 | `★★★★★` | **Simulasi Ngobrol 2 Arah**            | `Voice`        | Sparring dialog multi-putaran dengan audit 3 indikator sosial              |
+| 10 | `★★★★☆` | **Grammar in Action & Speaking Drill** | `Voice`        | Paham pola grammar santai + drill tanya-jawab lisan & ucap ulang           |
+| 11 | `★★★★☆` | **Active Vocabulary & Story Weaver**   | `Both (Text)`  | Menguasai kosakata/idiom lewat cerita, menulis, & speaking                 |
+| 12 | `★★★★☆` | **Impromptu 1-Minute Pitch (PREP)**    | `Voice`        | Bicara spontan 60 detik dengan kerangka P-R-E-P + Q&A dadakan              |
+| 13 | `★★★★☆` | **Active Recall Reader**               | `Both (Text)`  | Membaca teks padat lalu menjelaskan ulang tanpa melihat                    |
+| 14 | `★★★☆☆` | **Immersive Character Roleplay**       | `Voice`        | Berakting dialog bersama tokoh (*HRD, Barista, Auditor, Klien*)          |
+| 15 | `★★★☆☆` | **Feynman Concept Deconstructor**      | `Both (Text)`  | Menjelaskan konsep rumit secara sederhana, bebas jargon, + analogi         |
+| 16 | `★★★☆☆` | **First-Principles Case Solver**       | `Both (Text)`  | Membedah akar masalah (*5-Whys*) + menghadapi *Plot Twist*             |
+| 17 | `★★☆☆☆` | **Critical Thinking & Fallacy Hunter** | `Both (Text)`  | Menemukan sesat pikir, asumsi tersembunyi, & *Steelmanning*              |
+| 18 | `★★☆☆☆` | **Mental Math & Pattern Blitz**        | `Both (Text)`  | Hitung cepat di luar kepala, persentase, & deret logika angka              |
+| 19 | `★☆☆☆☆` | **Ekstraksi Fakta Atomic**             | `Text`         | Memecah teks menjadi fakta tunggal (*1 fakta = 1 poin*, tanpa opini)     |
+| 20 | `★☆☆☆☆` | **Analisis Teks & Bukti Kutipan**      | `Text`         | Ekstraksi fakta + wajib menyertakan kutipan kalimat asli (`"..."`)       |
+| 21 | `★☆☆☆☆` | **Rekonstruksi Transkrip 5 Pilar**     | `Text`         | Mengubah transkrip mentah menjadi narasi utuh & modul 5 pilar              |
 
 ---
 
-## ★★★★★ BINTANG 5 — WAJIB HARIAN (7 Game Inti Telinga & Anti-*Blank*)
+## ★★★★★ BINTANG 5 — WAJIB HARIAN (9 Game Inti Telinga, Memori Cerita & Anti-*Blank*)
 
 ### 1. Memory Span Matrix (`★★★★★` • `Both (Voice)`)
 
@@ -48,7 +50,25 @@ Setiap game di BrainForge.AI Pro memiliki **2 cara main**:
 - **Input & Output**: Input ketik spasi atau bicara lewat mikrofon; output berupa skor akurasi per posisi (`0–100`), urutan yang benar, `+XP` (jika skor ≥ 75), dan trik *chunking* (di AI).
 - **Kemampuan yang dilatih**: *Working Memory*, *Short-Term Memory*, konsentrasi, dan *Auditory Processing*.
 
-### 2. Listening Practice (Fakta Lisan) (`★★★★★` • `Voice`)
+### 2. Story Chain Memory (Rantai Cerita) (`★★★★★` • `Both (Voice)`)
+
+- **Bisa apa saja?**
+  - Melatih teknik *Mnemonic Story Chaining (Link Method)*: mengubah deretan kata kunci (*Low*: 5 kata harian seperti `sabun - shampo - air - bak mandi - sikat gigi`, *Medium*: 6–7 kata lintas situasi, *Hard*: 8 kata acak) menjadi **1 kalimat berurutan per kata** lalu menyatukannya menjadi **1 paragraf cerita utuh**.
+  - **Web Lab Interaktif**: Dilengkapi input kalimat per kata (+ 🎙️ Mic), tombol **🔊 Bacakan Kata (3×)**, tombol **⚡ Gabung Draf**, pengecekan kata transisi sebab-akibat, serta mode **🧠 Uji Recall Kata**.
+  - **Voice AI**: AI membacakan deretan kata kunci **3× berturut-turut** sebelum Anda merangkai kalimat & paragrafnya secara lisan.
+- **Input & Output**: Input kalimat per kata + 1 paragraf utuh; output berupa skor kelengkapan & urutan (`0–100`), deteksi kata transisi (*setelah, namun, karena, sehingga, sebelum*), dan contoh versi lebih hidup.
+- **Kemampuan yang dilatih**: *Associative Memory*, merangkai alur sebab-akibat, dan kohesi kalimat menjadi paragraf cerita.
+
+### 3. Story Echo & Retell (Dengar 3× & Ceritakan Ulang) (`★★★★★` • `Voice`)
+
+- **Bisa apa saja?**
+  - AI langsung membacakan **1 paragraf cerita berantai utuh** (4–5 kalimat di *Low*, 6–7 kalimat di *Medium*, 8–10 kalimat di *Hard*) sebanyak **3× berturut-turut** dengan jeda `"ulang lagi"`, tanpa membocorkan daftar kata kunci dulu.
+  - Setelah mendengar 3×, Anda bebas **menceritakan ulang dengan kalimat sendiri** (*Free Retelling*) dari awal sampai akhir.
+  - **Web Lab Interaktif**: Tombol Putar Audio otomatis memutar cerita penuh **3× berturut-turut** sebelum Anda rekam/ketik cerita ulangnya.
+- **Input & Output**: Input cerita ulang bebas via suara/teks; output berupa skor akurasi alur (`0–100`), poin yang tertangkap vs terlewat/terbalik, serta perbaikan kalimat di Voice Mode.
+- **Kemampuan yang dilatih**: *Auditory Story Retention*, menangkap urutan kronologis lisan, dan kelancaran menceritakan ulang (*retelling fluency*).
+
+### 4. Listening Practice (Fakta Lisan) (`★★★★★` • `Voice`)
 
 - **Bisa apa saja?**
   - Memutar monolog/briefing lisan tanpa menampilkan teks selama latihan berlangsung (kecepatan suara naik dari `0.92x` Low, `1.0x` Medium, hingga `1.12x` Hard).
@@ -57,7 +77,7 @@ Setiap game di BrainForge.AI Pro memiliki **2 cara main**:
 - **Input & Output**: Input suara/teks poin fakta yang ditangkap; output berupa skor (`0–100`), detail kunci tertangkap vs terlewat, daftar fakta wajib, dan transkrip asli.
 - **Kemampuan yang dilatih**: *Listening Comprehension*, ketelitian telinga terhadap angka/ralat, dan *Auditory Short-Term Memory*.
 
-### 3. Recall Percakapan (Dialog 2 Orang) (`★★★★★` • `Voice`)
+### 5. Recall Percakapan (Dialog 2 Orang) (`★★★★★` • `Voice`)
 
 - **Bisa apa saja?**
   - Memutar dialog **2 suara berbeda (Pria & Wanita)** agar telinga terbiasa mengikuti percakapan dua pihak.
@@ -66,7 +86,7 @@ Setiap game di BrainForge.AI Pro memiliki **2 cara main**:
 - **Input & Output**: Input suara/teks rekonstruksi percakapan; output berupa skor (`0–100`), fakta tertangkap vs tertukar, poin kesepakatan wajib, dan transkrip lengkap per pembicara.
 - **Kemampuan yang dilatih**: *Selective Attention*, membedakan informasi antar pembicara, dan *Auditory Working Memory*.
 
-### 4. Structured Speaking (P-A-C & P-P-A-K) (`★★★★★` • `Voice`)
+### 6. Structured Speaking (P-A-C & P-P-A-K) (`★★★★★` • `Voice`)
 
 - **Bisa apa saja?**
   - Melatih menyusun pikiran secara runtut agar tidak melompat-lompat atau tiba-tiba *blank* saat berbicara.
@@ -75,7 +95,7 @@ Setiap game di BrainForge.AI Pro memiliki **2 cara main**:
 - **Input & Output**: Input suara (atau teks); output berupa skor (`0–100`), audit per elemen P-A-C/P-P-A-K, serta model kalimat runtut untuk diucapkan ulang.
 - **Kemampuan yang dilatih**: Keruntutan berpikir lisan, *Verbal Fluency*, dan komunikasi profesional/harian.
 
-### 5. Conversation Initiation (Buka & Nimbrung) (`★★★★★` • `Both (Voice)`)
+### 7. Conversation Initiation (Buka & Nimbrung) (`★★★★★` • `Both (Voice)`)
 
 - **Bisa apa saja?**
   - Melatih **4 teknik membuka obrolan** (*Contextual, Question, Self-Introduction, Observation*) dan **6 kalimat cepat (*Quick Entry*)** untuk ikut masuk (*nimbrung*) ke obrolan teman/rekan kerja.
@@ -83,7 +103,7 @@ Setiap game di BrainForge.AI Pro memiliki **2 cara main**:
 - **Input & Output**: Input ucapan/kalimat pembuka; output berupa skor kealamian (`0–100`), cek apakah mengandung konteks & pertanyaan pancingan, alternatif kalimat lebih luwes, serta simulasi balasan teman (di AI).
 - **Kemampuan yang dilatih**: Inisiatif sosial, keberanian membuka percakapan, dan menurunkan rasa canggung/cemas.
 
-### 6. Conversation Continuation (Sambung Obrolan) (`★★★★★` • `Both (Voice)`)
+### 8. Conversation Continuation (Sambung Obrolan) (`★★★★★` • `Both (Voice)`)
 
 - **Bisa apa saja?**
   - Melatih rumus anti-diam: **Dengar → Tangkap 1 Kata Kunci → Tanggapi → Tanyakan**.
@@ -91,7 +111,7 @@ Setiap game di BrainForge.AI Pro memiliki **2 cara main**:
 - **Input & Output**: Input ucapan/kalimat balasan atas pernyataan teman; output berupa skor (`0–100`), deteksi kata kunci yang ditangkap, cek *Self-Disclosure* & *Follow-up Question*, dan contoh respons ideal.
 - **Kemampuan yang dilatih**: *Active Listening*, refleks menyambung obrolan agar tidak mati (*dead air*), dan pengembangan topik.
 
-### 7. Simulasi Ngobrol 2 Arah (Live Sparring) (`★★★★★` • `Voice`)
+### 9. Simulasi Ngobrol 2 Arah (Live Sparring) (`★★★★★` • `Voice`)
 
 - **Bisa apa saja?**
   - Simulasi ngobrol bolak-balik multi-putaran dengan tokoh yang bisa Anda tentukan sendiri (*rekan kerja, teman baru, senior yang sibuk*).
@@ -103,7 +123,7 @@ Setiap game di BrainForge.AI Pro memiliki **2 cara main**:
 
 ## ★★★★☆ BINTANG 4 — SANGAT DISARANKAN (4 Game Fondasi English & Retensi)
 
-### 8. Grammar in Action & Speaking Drill (`★★★★☆` • `Voice`)
+### 10. Grammar in Action & Speaking Drill (`★★★★☆` • `Voice`)
 
 - **Bisa apa saja?**
   - Menjelaskan grammar Bahasa Inggris secara santai (istilah diberi arti dalam kurung miring seperti *Singular (tunggal)*; Verb 2/3 disertai Verb 1-nya seperti *went (go)*).
@@ -112,7 +132,7 @@ Setiap game di BrainForge.AI Pro memiliki **2 cara main**:
 - **Input & Output**: Input ucapan Bahasa Inggris lewat mic atau teks; output berupa skor (`0–100`), cek pola grammar target, koreksi kalimat native, dan rapor akhir.
 - **Kemampuan yang dilatih**: *English Grammar Fluency*, akurasi tenses saat berbicara, dan refleks pengucapan.
 
-### 9. Active Vocabulary & Story Weaver (`★★★★☆` • `Both (Text)`)
+### 11. Active Vocabulary & Story Weaver (`★★★★☆` • `Both (Text)`)
 
 - **Bisa apa saja?**
   - Menyajikan **Box of Words** lengkap dengan **simbol fonetik `/.../`** dan arti, dirangkai ke dalam cerita pendek kontekstual (5 kata *Low*, 7 phrasal verbs *Medium*, 8–10 idiom C1 *Hard*).
@@ -121,7 +141,7 @@ Setiap game di BrainForge.AI Pro memiliki **2 cara main**:
 - **Input & Output**: Input cerita/kalimat (teks) lalu tanya-jawab lisan (suara); output berupa skor aktivasi (`0–100`), pelacak kata terpakai vs belum, tabel koreksi, dan paragraf 5W+1H.
 - **Kemampuan yang dilatih**: Penguasaan kosakata aktif, pelafalan fonetik, menulis kontekstual, dan speaking.
 
-### 10. Impromptu 1-Minute Pitch (PREP) (`★★★★☆` • `Voice`)
+### 12. Impromptu 1-Minute Pitch (PREP) (`★★★★☆` • `Voice`)
 
 - **Bisa apa saja?**
   - Melatih bicara spontan **60 detik** (dilengkapi timer hitung mundur) memakai kerangka **P–R–E–P** (*Point → Reason → Example → Point*).
@@ -129,7 +149,7 @@ Setiap game di BrainForge.AI Pro memiliki **2 cara main**:
 - **Input & Output**: Input pitch suara/teks; output berupa skor struktur & daya gugah (`0–100`), audit 4 unsur P-R-E-P, versi *Polished*, dan 1 pertanyaan Q&A.
 - **Kemampuan yang dilatih**: *Public Speaking* spontan, ketajaman argumen deduktif, dan kontrol tempo bicara.
 
-### 11. Active Recall Reader (`★★★★☆` • `Both (Text)`)
+### 13. Active Recall Reader (`★★★★☆` • `Both (Text)`)
 
 - **Bisa apa saja?**
   - Menyediakan bacaan non-fiksi bertingkat (**Low, Medium, Hard**) dalam ID & EN, atau **menempel artikel/catatan Anda sendiri**.
@@ -141,7 +161,7 @@ Setiap game di BrainForge.AI Pro memiliki **2 cara main**:
 
 ## ★★★☆☆ BINTANG 3 — OPSIONAL BERGUNA (3 Game Situasional & Pemahaman)
 
-### 12. Immersive Character Roleplay (`★★★☆☆` • `Voice`)
+### 14. Immersive Character Roleplay (`★★★☆☆` • `Voice`)
 
 - **Bisa apa saja?**
   - Anda bebas menentukan **tokoh lawan bicaranya** (*HRD, Barista London, Auditor HSE, Klien*) dan skenario situasinya.
@@ -149,14 +169,14 @@ Setiap game di BrainForge.AI Pro memiliki **2 cara main**:
 - **Input & Output**: Input dialog suara/teks multi-giliran; output berupa balasan tokoh + `Coach Feedback`, skor kelancaran (`0–100`), dan daftar frasa baru.
 - **Kemampuan yang dilatih**: Bahasa Inggris/komunikasi kontekstual, diplomasi profesional, dan spontanitas dialog.
 
-### 13. Feynman Concept Deconstructor (`★★★☆☆` • `Both (Text)`)
+### 15. Feynman Concept Deconstructor (`★★★☆☆` • `Both (Text)`)
 
 - **Bisa apa saja?**
   - Menguji apakah Anda benar-benar paham suatu konsep atau sekadar hafal istilah keren (*Low*: definisi anak 12 tahun + contoh, *Medium*: + mekanisme & analogi, *Hard*: 5 pilar + uji kasus ekstrem/*edge case*).
 - **Input & Output**: Input penjelasan suara/teks; output berupa skor kejernihan (`0–100`), audit istilah hafalan vs mekanisme vs analogi, dan rekonstruksi penjelasan terbaik.
 - **Kemampuan yang dilatih**: Pemahaman konseptual mendalam, berpikir analogis, dan kemampuan menjelaskan ide rumit secara sederhana.
 
-### 14. First-Principles Case Solver (`★★★☆☆` • `Both (Text)`)
+### 16. First-Principles Case Solver (`★★★☆☆` • `Both (Text)`)
 
 - **Bisa apa saja?**
   - Menyajikan masalah operasional, proyek, atau krisis kerja nyata dengan batasan waktu, biaya, atau personel; melatih membedah akar penyebab (**Root Cause / 5-Whys**) + menghadapi **Plot Twist mendadak**.
@@ -167,14 +187,14 @@ Setiap game di BrainForge.AI Pro memiliki **2 cara main**:
 
 ## ★★☆☆☆ BINTANG 2 — SELINGAN SAJA (2 Game Debat & Hitung)
 
-### 15. Critical Thinking & Fallacy Hunter (`★★☆☆☆` • `Both (Text)`)
+### 17. Critical Thinking & Fallacy Hunter (`★★☆☆☆` • `Both (Text)`)
 
 - **Bisa apa saja?**
   - Membedah klaim populer, menemukan sesat pikir (*Hasty Generalization, False Dilemma, Post Hoc*), memisahkan korelasi vs kausalitas, dan melakukan **Steelmanning** (merumuskan argumen terkuat kubu lawan di Level Hard).
 - **Input & Output**: Input analisis argumen; output berupa skor ketajaman logika (`0–100`), audit deteksi asumsi/alasan/steelmanning, dan sanggahan *Devil's Advocate* (di AI).
 - **Kemampuan yang dilatih**: *Logical Reasoning*, deteksi bias kognitif, dan argumentasi berbasis bukti.
 
-### 16. Mental Math & Pattern Blitz (`★★☆☆☆` • `Both (Text)`)
+### 18. Mental Math & Pattern Blitz (`★★☆☆☆` • `Both (Text)`)
 
 - **Bisa apa saja?**
   - Menghasilkan soal hitung cepat & deret angka acak tanpa kalkulator (*Low*: tambah-kurang & deret tetap; *Medium*: perkalian, persentase, deret bertingkat; *Hard*: Fibonacci, deret logika, diskon + *split bill*), lengkap dengan trik *Mental Shortcut*.
@@ -185,21 +205,21 @@ Setiap game di BrainForge.AI Pro memiliki **2 cara main**:
 
 ## ★☆☆☆☆ BINTANG 1 — LEWATI DULU (3 Game Khusus Pengolah Dokumen & Transkrip)
 
-### 17. Ekstraksi Fakta Atomic (Tanpa Kutipan) (`★☆☆☆☆` • `Text`)
+### 19. Ekstraksi Fakta Atomic (Tanpa Kutipan) (`★☆☆☆☆` • `Text`)
 
 - **Bisa apa saja?**
   - Menerima **teks panjang tempelan Anda sendiri** (artikel, SOP, laporan) untuk dipecah menjadi fakta tunggal (**1 fakta = 1 poin atomic**) tanpa menggabung fakta, tanpa merangkum, dan tanpa opini luar.
 - **Input & Output**: Input teks sumber & daftar poin bernomor; output berupa skor ketelitian (`0–100`), jumlah poin terpisah terdeteksi, dan detail/angka yang terlewat.
 - **Kemampuan yang dilatih**: Ketelitian baca detail, ekstraksi data kuantitatif, dan pemisahan fakta vs opini.
 
-### 18. Analisis Teks & Bukti Kutipan ("...") (`★☆☆☆☆` • `Text`)
+### 20. Analisis Teks & Bukti Kutipan ("...") (`★☆☆☆☆` • `Text`)
 
 - **Bisa apa saja?**
   - Sama seperti Game 17, tetapi **setiap poin fakta wajib disertai kutipan kalimat persis (`"..."`)** dari teks sumber sebagai bukti (*Zero Hallucination*).
 - **Input & Output**: Input teks sumber & poin fakta beserta kutipan `"..."`; output berupa skor ketepatan bukti (`0–100`), status kepatuhan tanda kutip, dan daftar fakta yang belum dikutip.
 - **Kemampuan yang dilatih**: Verifikasi berbasis bukti, audit dokumen/kontrak/riset, dan pencegahan halusinasi informasi.
 
-### 19. Rekonstruksi Transkrip & Modul 5 Pilar (`★☆☆☆☆` • `Text`)
+### 21. Rekonstruksi Transkrip & Modul 5 Pilar (`★☆☆☆☆` • `Text`)
 
 - **Bisa apa saja?**
   - Menerima **transkrip video/rekaman/podcast mentah** atau naskah panjang untuk dirapikan (*Zero Information Loss*) menjadi **Narasi Utuh + Poin Analisis 7 Elemen** hingga **Modul 5 Pilar** (termasuk Diagram Alir Mermaid, Toolkit Aksi, & Glosarium).
