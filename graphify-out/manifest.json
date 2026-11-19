@@ -1,5 +1,5 @@
 {
-  "app.js": 1794981098.4138494,
+  "app.js": 1795059693.2397525,
   "build_standalone.py": {
     "mtime": 1794751697.7045066,
     "seen": 1794752128.3535635,
@@ -18,21 +18,21 @@
     "ast_hash": "661b6edc130be61f8b4c00100a686aad",
     "semantic_hash": "661b6edc130be61f8b4c00100a686aad"
   },
-  "mobile_app/lib/main.dart": 1794842897.7348282,
+  "mobile_app/lib/main.dart": 1795059693.2397525,
   "mobile_app/test/widget_test.dart": {
     "mtime": 1794727681.6621199,
     "seen": 1794749137.3382967,
     "ast_hash": "bf2de8d16cd1096fc675582899e89e56",
     "semantic_hash": "bf2de8d16cd1096fc675582899e89e56"
   },
-  "prompts.js": 1794997424.703249,
+  "prompts.js": 1795059693.2397525,
   "server.py": {
     "mtime": 1794752431.3358133,
     "seen": 1794753200.709623,
     "ast_hash": "cb851786754561d2732b182ec9f6e7cf",
     "semantic_hash": ""
   },
-  "sw.js": 1794997426.8862262,
+  "sw.js": 1795059815.9030948,
   ".agents/rules/ponytail.md": {
     "mtime": 1794749124.4566453,
     "seen": 1794751621.4951894,
@@ -87,7 +87,7 @@
     "ast_hash": "7a1e51784c37d54af988c9547d8583cc",
     "semantic_hash": ""
   },
-  "index.html": 1794980964.599209,
+  "index.html": 1795059693.2397525,
   "mobile_app/README.md": {
     "mtime": 1794727681.6571176,
     "seen": 1794751621.4951894,
@@ -125,7 +125,7 @@
     "semantic_hash": ""
   },
   "updated_at": "2026-11-15T22:26:02.396099",
-  "styles.css": 1794980972.0166104,
+  "styles.css": 1795059815.9030948,
   "logo.png": 1794763799.5131023,
   "asset/catatan/analisis_19_games_brainforge.md": 1794981256.748479,
   "README.md": 1795009845.6281717,
