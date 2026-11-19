@@ -136,6 +136,53 @@ const DEFAULT_MODULES = [
     ],
   },
   {
+    id: 'story-chain-memory',
+    category: 'core',
+    skill: 'memory',
+    title: 'Story Chain Memory (Rantai Cerita)',
+    icon: '🔗',
+    color: 'linear-gradient(135deg, #0ea5e9, #6366f1)',
+    tag: 'Story Chaining + Web Game',
+    description:
+      'Ubah deretan kata kunci menjadi 1 kalimat berurutan per kata, lalu gabungkan menjadi 1 paragraf cerita utuh yang mengalir dengan sebab-akibat.',
+    webLabType: 'story-chain',
+    topicMode: 'context',
+    topicLabel: 'Situasi / Tema Rantai Cerita (Opsional)',
+    topicPlaceholder: 'Contoh: Rutinitas pagi di kamar mandi, belanja di pasar, inspeksi HSE lapangan...',
+    defaultInteraction: 'voice',
+    uniqueMechanic:
+      'Teknik Mnemonic Story Chaining (Link Method): pecah kata kunci → buat 1 kalimat berurutan per kata → gabung jadi 1 paragraf cerita utuh.',
+    levelHints: {
+      Low: '5 kata kunci 1 situasi harian (misal: sabun - shampo - air - bak mandi - sikat gigi) → 1 kalimat/kata + 1 paragraf utuh',
+      Medium: '6–7 kata kunci lintas situasi + 1–2 kata acak tak terduga → wajib pakai transisi sebab-akibat/waktu menjadi 1 paragraf utuh',
+      Hard: '8 kata kunci acak/kontras + 1 aturan tantangan (sudut pandang/alur khusus) + uji recall ulang deretan kata tanpa melihat',
+    },
+    levelSpecs: {
+      Low: {
+        wordLoad: '5 kata kunci berurutan dalam 1 situasi harian yang akrab (contoh: sabun - shampo - air - bak mandi - sikat gigi).',
+        chainRule: 'Langkah A: Buat 1 kalimat berurutan untuk tiap kata (Format: "Kata — Kalimat"). Langkah B: Gabungkan seluruhnya menjadi 1 paragraf cerita utuh yang mengalir.',
+        transitionFocus: 'Gunakan kata penghubung alami seperti "Setelah memakai...", "Namun karena...", "Setelah selesai...", dan "Sebelum...".',
+      },
+      Medium: {
+        wordLoad: '6 hingga 7 kata kunci lintas situasi yang menyelipkan 1–2 kata acak tak terduga.',
+        chainRule: 'Langkah A: Buat 1 kalimat penghubung sebab-akibat per kata secara berurutan. Langkah B: Rangkai menjadi 1 paragraf utuh yang logis meski ada kata kejutan.',
+        transitionFocus: 'Wajib gunakan transisi sebab-akibat & waktu ("Akibatnya...", "Sayangnya...", "Untuk mengatasi itu...", "Akhirnya...").',
+      },
+      Hard: {
+        wordLoad: '8 kata kunci acak & kontras dari berbagai domain tanpa hubungan alami.',
+        chainRule: 'Langkah A: Buat 1 kalimat vivid per kata secara berurutan. Langkah B: Satukan menjadi 1 paragraf utuh yang hidup + jawab 1 pertanyaan distraksi lalu recall ulang ke-8 kata tanpa melihat!',
+        transitionFocus: 'Gabungkan transisi sebab-akibat, kontras, & aksi konkret yang memaksa imajinasi mengunci urutan kata.',
+      },
+    },
+    suggestions: [
+      'Rutinitas pagi di kamar mandi (sabun, shampo, air, bak mandi, sikat gigi)',
+      'Persiapan berangkat kerja & perjalanan naik motor/KRL',
+      'Memasak sarapan cepat di dapur saat kesiangan',
+      'Inspeksi keselamatan kerja HSE & pengecekan alat lapangan',
+      'Belanja kebutuhan mingguan di pasar & warung lokal',
+    ],
+  },
+  {
     id: 'active-recall',
     category: 'core',
     skill: 'recall',
@@ -965,8 +1012,70 @@ const DEFAULT_MODULES = [
   },
 ];
 
-// === SUBKATEGORI & TOPIK EKSKLUSIF SPESIFIK PER GAME (19 GAME × 3 SUBKATEGORI × 6 TOPIK = 342 TOPIK KHUSUS) ===
+// === SUBKATEGORI & TOPIK EKSKLUSIF SPESIFIK PER GAME (20 GAME × 3 SUBKATEGORI × 6 TOPIK = 360 TOPIK KHUSUS) ===
 const MODULE_EXCLUSIVE_SUBCATEGORIES = {
+  'story-chain-memory': [
+    {
+      nameId: 'Rutinitas Harian & Situasi Rumah',
+      nameEn: 'Daily Routines & Home Situations',
+      topicsId: [
+        'Rutinitas pagi di kamar mandi (sabun, shampo, air, bak mandi, sikat gigi)',
+        'Memasak sarapan di dapur (wajan, minyak, telur, garam, piring)',
+        'Bersiap berangkat kerja (kunci motor, helm, jaket, dompet, sepatu)',
+        'Membersihkan kamar tidur (sapu, kemoceng, sprei, bantal, pewangi)',
+        'Menyeduh kopi sore sambil hujan (ketel, kopi, gula, cangkir, payung)',
+        'Belanja cepat di minimarket (keranjang, roti, susu, kasir, struk)',
+      ],
+      topicsEn: [
+        'Morning bathroom routine (soap, shampoo, water, bathtub, toothbrush)',
+        'Cooking breakfast in the kitchen (pan, oil, egg, salt, plate)',
+        'Getting ready for work (house key, helmet, jacket, wallet, shoes)',
+        'Tidying up the bedroom (broom, duster, bedsheet, pillow, air freshener)',
+        'Making afternoon coffee in the rain (kettle, coffee, sugar, mug, umbrella)',
+        'Quick grocery run (basket, bread, milk, cashier, receipt)',
+      ],
+    },
+    {
+      nameId: 'Aktivitas Kantor, Lapangan & HSE',
+      nameEn: 'Office, Field & HSE Operations',
+      topicsId: [
+        'Inspeksi keselamatan lapangan (helm proyek, rompi, sarung tangan, APAR, laporan)',
+        'Persiapan presentasi rapat (laptop, kabel HDMI, proyektor, catatan, kopi)',
+        'Penanganan kebocoran pipa kecil (kunci inggris, kran, ember, lap, segel)',
+        'Briefing pagi tim operasional (papan tulis, spidol, jadwal, target, tanda tangan)',
+        'Pengiriman paket logistik (kardus, lakban, timbangan, resi, kurir)',
+        'Pertolongan pertama luka ringan (kotak P3K, alkohol, kasa, plester, sarung tangan)',
+      ],
+      topicsEn: [
+        'Field safety inspection (hard hat, vest, gloves, fire extinguisher, report)',
+        'Meeting presentation setup (laptop, HDMI cable, projector, notes, coffee)',
+        'Fixing a minor pipe leak (wrench, valve, bucket, rag, seal)',
+        'Morning operations briefing (whiteboard, marker, schedule, target, sign-off)',
+        'Logistics parcel dispatch (box, tape, scale, tracking label, courier)',
+        'Minor wound first aid (first-aid kit, antiseptic, gauze, bandage, gloves)',
+      ],
+    },
+    {
+      nameId: 'Kombinasi Kata Kejutan & Lintas Situasi',
+      nameEn: 'Surprise Cross-Context Word Chains',
+      topicsId: [
+        'Kombinasi rumah & kantor (payung, printer, pisang, kunci, lift)',
+        'Kombinasi perjalanan & teknologi (tiket, baterai, peta, kopi, kamera)',
+        'Kombinasi olahraga & dapur (sepatu lari, botol minum, handuk, blender, pisang)',
+        'Kombinasi hujan & pekerjaan (jas hujan, sinyal, modem, lampu senter, dokumen)',
+        'Kombinasi pasar & bengkel (bawang, obeng, kantong plastik, oli, uang pas)',
+        'Kombinasi liburan & darurat (koper, paspor, obat flu, taksi, colokan)',
+      ],
+      topicsEn: [
+        'Home & office mix (umbrella, printer, banana, key, elevator)',
+        'Travel & tech mix (ticket, battery, map, coffee, camera)',
+        'Workout & kitchen mix (running shoes, bottle, towel, blender, banana)',
+        'Rain & work mix (raincoat, signal, router, flashlight, document)',
+        'Market & workshop mix (onion, screwdriver, bag, oil, exact cash)',
+        'Holiday & emergency mix (suitcase, passport, cold medicine, taxi, adapter)',
+      ],
+    },
+  ],
   'memory-span': [
     {
       nameId: 'Deretan Angka, PIN & Kode Keamanan',
@@ -5044,6 +5153,20 @@ function adaptTopicToGameMechanic(mod, rawTopic, idx, isEn) {
             'Matriks Ingatan Urutan Item: ',
           ][v] + rawTopic;
 
+    case 'story-chain-memory':
+      if (isEn) {
+        return [
+          'Story Chain (Link Method Sequence): ',
+          'Cause-and-Effect Narrative Memory: ',
+          'Sequential Keyword Storytelling: ',
+        ][v] + rawTopic;
+      }
+      return [
+        'Rantai Cerita Berurutan (Story Chaining): ',
+        'Memori Sebab-Akibat & Paragraf Utuh: ',
+        'Rangkai Kata Kunci Jadi Cerita: ',
+      ][v] + rawTopic;
+
     case 'active-recall':
       if (isEn) {
         return [
@@ -6334,6 +6457,60 @@ Setelah ${safeName} menjawab:
 
 ## 📋 MULAI SESI SEKARANG
 Sapa **${safeName}** dengan singkat, jelaskan aturan **Level ${level}** dalam 1 kalimat, dan langsung tampilkan tantangan **Ronde 1**!`;
+    }
+
+    case 'story-chain-memory': {
+      const deliveryNote = isVoice
+        ? `**ATURAN WAJIB SUARA (3× ULANG KATA KUNCI)**: Bacakan daftar kata kunci Ronde ini **sebanyak 3 KALI berturut-turut** dengan artikulasi pelan, jernih, dan jeda 1 detik antar-kata (contoh: _"Dengarkan dan kunci urutannya, saya ulang 3 kali: [kata 1 ... kata N]. Kedua: [kata 1 ... kata N]. Ketiga: [kata 1 ... kata N]. Sekarang giliranmu!"_). Setelah itu tunggu ${safeName} merangkai kalimat berantai per kata lalu menyatukannya menjadi 1 paragraf utuh.`
+        : `Tampilkan daftar kata kunci berurutan (pisahkan dengan tanda \`-\`, contoh: \`sabun - shampo - air - bak mandi - sikat gigi\`). Minta ${safeName} menuliskan: **(1) Daftar kalimat per kata** lalu **(2) Gabungan 1 paragraf cerita utuh** dalam satu balasan!`;
+
+      return `${masterHeader}
+
+## 📐 SPESIFIKASI KHUSUS LEVEL ${level.toUpperCase()} (STORY CHAIN MEMORY — RANTAI CERITA)
+
+> [!IMPORTANT]
+> **Rumus Inti Mnemonic Story Chaining (Link Method):**
+> Otak jauh lebih mudah mengingat urutan benda jika dirangkai menjadi **alur sebab-akibat yang hidup** daripada dihafal lepas!
+>
+> **Contoh Pola Output yang Diharapkan (5 Kata: \`sabun - shampo - air - bak mandi - sikat gigi\`):**
+> - **Sabun** — Pagi hari, Andi mengambil sabun untuk mandi.
+> - **Shampo** — Setelah memakai sabun, Andi mengambil shampo untuk mencuci rambutnya.
+> - **Air** — Namun, shampo yang dipakai terlalu banyak sehingga Andi membutuhkan lebih banyak air untuk membilas rambutnya.
+> - **Bak mandi** — Setelah selesai membilas rambut, Andi mengisi bak mandi dengan air.
+> - **Sikat gigi** — Sebelum berangkat kerja, Andi mengambil sikat gigi untuk membersihkan giginya.
+>
+> **Gabungan 1 Paragraf Utuh:**
+> _"Pagi hari, Andi mengambil sabun untuk mandi. Setelah memakai sabun, Andi mengambil shampo untuk mencuci rambutnya. Namun, karena shampo yang digunakan terlalu banyak, Andi membutuhkan lebih banyak air untuk membilas rambutnya. Setelah selesai membilas rambut, Andi mengisi bak mandi dengan air. Sebelum berangkat kerja, Andi mengambil sikat gigi untuk membersihkan giginya."_
+
+1. **Beban Kata Kunci**: ${spec.wordLoad}
+2. **Aturan Merangkai**: ${spec.chainRule}
+3. **Fokus Kata Transisi**: ${spec.transitionFocus}
+
+---
+
+## 🏛️ PROTOKOL PERMAINAN (${rounds} RONDE BERTAHAP)
+
+### Langkah 1 — Sajikan Deretan Kata Kunci
+- Berikan deretan kata kunci yang **berbeda di setiap ronde** terkait tema **"${safeTopic}"** sesuai spesifikasi **Level ${level}** (JANGAN langsung membocorkan contoh ceritanya dulu!).
+- ${deliveryNote}
+- Ingatkan ${safeName} untuk mengirim **2 bagian**:
+  1. **Kalimat Per Kata** (1 kalimat berurutan untuk tiap kata kunci, dengan transisi sebab-akibat/waktu).
+  2. **1 Paragraf Cerita Utuh** (menggabungkan semua kalimat tadi agar mengalir mulus).
+- **Berhenti di sini dan tunggu jawaban ${safeName}.**
+
+### Langkah 2 — Audit Rantai Cerita & Versi Polish
+Setelah ${safeName} menjawab:
+1. **📊 Skor Story Chain (0–100)** berdasarkan 3 komponen:
+   - **Kelengkapan & Urutan Kata**: Apakah semua kata kunci muncul lengkap sesuai urutan dari awal hingga akhir?
+   - **Jembatan Sebab-Akibat**: Apakah kalimat ke kalimat saling terkait logis (bukan kalimat terpisah yang berdiri sendiri)?
+   - **Kelancaran Paragraf Utuh**: Apakah gabungan paragrafnya enak dibaca/didengar dengan kata transisi alami?
+2. **✨ Contoh Versi Lebih Hidup (Polish)**: Berikan 1 versi perbaikan singkat (per kata + paragraf utuh) hanya jika ada bagian yang terasa kaku atau putus logikanya${isVoice ? ' — dan jika ada kalimat yang dikoreksi, minta **' + safeName + '** mengucapkan ulang kalimat perbaikan itu terlebih dahulu' : ''}.
+3. **🧠 Bonus Recall Check**: ${level === 'Hard' ? 'Berikan 1 pertanyaan pengecoh singkat lalu minta ' + safeName + ' menyebut ulang urutan ke-8 kata kunci tanpa melihat catatannya!' : 'Ajak ' + safeName + ' menyebutkan ulang urutan kata kuncinya sekilas dari cerita yang baru ia buat, lalu lanjut ke **Ronde Berikutnya** (hingga tuntas ' + rounds + ' ronde).'}
+
+---
+
+## 📋 MULAI SESI SEKARANG
+Sapa **${safeName}** dengan singkat, jelaskan alur **Kata → Kalimat Per Kata → 1 Paragraf Utuh**, lalu mulai sesuai aturan mode interaksi di atas!`;
     }
 
     case 'active-recall': {

@@ -238,6 +238,7 @@ const INTERACTION_BADGE_MAP = {
   'roleplay-mastery': { label: '🎙️ Voice', cls: 'mode-voice' },
   'impromptu-speaking': { label: '🎙️ Voice', cls: 'mode-voice' },
   'memory-span': { label: '🎙️💬 Both (Voice)', cls: 'mode-both-voice' },
+  'story-chain-memory': { label: '🎙️💬 Both (Voice)', cls: 'mode-both-voice' },
   'conversation-initiation': { label: '🎙️💬 Both (Voice)', cls: 'mode-both-voice' },
   'conversation-continuation': { label: '🎙️💬 Both (Voice)', cls: 'mode-both-voice' },
   'active-recall': { label: '💬🎙️ Both (Text)', cls: 'mode-both-text' },
@@ -253,6 +254,7 @@ const INTERACTION_BADGE_MAP = {
 
 const STAR_PRIORITY_MAP = {
   'memory-span': 5,
+  'story-chain-memory': 5,
   'listening-practice': 5,
   'recall-percakapan': 5,
   'structured-speaking': 5,
@@ -707,14 +709,16 @@ function startMicDictation(targetInputEl, langCode = 'id-ID') {
 
 // ==================== INTERACTIVE WEB LABS (ALL 19 MODULES SUPPORTED) ====================
 const labMemory = document.getElementById('lab-memory');
+const labStoryChain = document.getElementById('lab-story-chain');
 const labRecall = document.getElementById('lab-recall');
 const labAudio = document.getElementById('lab-audio');
 const labMath = document.getElementById('lab-math');
 const labSocial = document.getElementById('lab-social');
 
 function initWebLabForModule(webLabType) {
-  const isUniversalStudio = !['memory', 'recall', 'listening', 'dialogue', 'math'].includes(webLabType);
+  const isUniversalStudio = !['memory', 'story-chain', 'recall', 'listening', 'dialogue', 'math'].includes(webLabType);
   labMemory.hidden = webLabType !== 'memory';
+  if (labStoryChain) labStoryChain.hidden = webLabType !== 'story-chain';
   labRecall.hidden = webLabType !== 'recall';
   labAudio.hidden = !(webLabType === 'listening' || webLabType === 'dialogue');
   labMath.hidden = webLabType !== 'math';
@@ -727,6 +731,7 @@ function syncWebLabWithWorkspace() {
   const type = currentModule.webLabType || 'social';
   // Sync level from workspace
   mgLevel = currentLevel;
+  scLevel = currentLevel;
   arLevel = currentLevel;
   auLevel = currentLevel;
   mmLevel = currentLevel;
@@ -734,6 +739,9 @@ function syncWebLabWithWorkspace() {
 
   document.querySelectorAll('#mg-level-pills .chip-btn').forEach((b) =>
     b.classList.toggle('active', b.dataset.mgLevel === mgLevel)
+  );
+  document.querySelectorAll('#sc-level-pills .chip-btn').forEach((b) =>
+    b.classList.toggle('active', b.dataset.scLevel === scLevel)
   );
   document.querySelectorAll('#ar-level-pills .chip-btn').forEach((b) =>
     b.classList.toggle('active', b.dataset.arLevel === arLevel)
@@ -750,6 +758,8 @@ function syncWebLabWithWorkspace() {
 
   if (type === 'recall') {
     loadRecallPassage();
+  } else if (type === 'story-chain') {
+    resetStoryChainLabView();
   } else if (type === 'listening' || type === 'dialogue') {
     loadAudioScenario();
   } else if (type === 'math') {
@@ -758,6 +768,272 @@ function syncWebLabWithWorkspace() {
     loadSocialScenario();
   }
 }
+
+// --- LAB 1B: STORY CHAIN MEMORY (Kata -> 1 Kalimat/Kata -> 1 Paragraf Utuh) ---
+let scLevel = 'Low';
+let scRound = 1;
+let scScore = 0;
+let scCurrentSet = null;
+let scStepInputs = [];
+
+const STORY_CHAIN_BANK = {
+  Low: [
+    {
+      theme: 'Rutinitas Pagi di Kamar Mandi',
+      words: ['sabun', 'shampo', 'air', 'bak mandi', 'sikat gigi'],
+      sampleParagraph:
+        'Pagi hari, Andi mengambil sabun untuk mandi. Setelah memakai sabun, Andi mengambil shampo untuk mencuci rambutnya. Namun, karena shampo yang digunakan terlalu banyak, Andi membutuhkan lebih banyak air untuk membilas rambutnya. Setelah selesai membilas rambut, Andi mengisi bak mandi dengan air. Sebelum berangkat kerja, Andi mengambil sikat gigi untuk membersihkan giginya.',
+    },
+    {
+      theme: 'Membuat Sarapan Cepat di Dapur',
+      words: ['wajan', 'minyak', 'telur', 'garam', 'piring'],
+      sampleParagraph:
+        'Pagi itu Budi meletakkan wajan di atas kompor untuk menyiapkan sarapan. Setelah wajan cukup panas, ia menuangkan sedikit minyak agar tidak lengket. Kemudian, Budi memecahkan sebutir telur ke dalam wajan tersebut. Agar rasanya gurih, ia menaburkan sejumput garam di atasnya. Setelah matang sempurna, Budi memindahkan telur dadar itu ke atas piring untuk disantap.',
+    },
+    {
+      theme: 'Persiapan Berangkat Kerja',
+      words: ['kunci motor', 'helm', 'jaket', 'dompet', 'sepatu'],
+      sampleParagraph:
+        'Sebelum keluar rumah, Raka segera mengambil kunci motor dari gantungan dinding. Di teras, ia mengenakan helm agar aman selama di perjalanan. Karena angin pagi cukup dingin, Raka juga memakai jaket tebalnya. Sebelum naik ke motor, ia memeriksa saku untuk memastikan dompet sudah terbawa. Terakhir, ia mengikat tali sepatu dengan rapi lalu berangkat.',
+    },
+  ],
+  Medium: [
+    {
+      theme: 'Kombinasi Rumah & Kantor (Ada Kata Kejutan)',
+      words: ['payung', 'kopi', 'printer', 'pisang', 'kunci', 'lift'],
+      sampleParagraph:
+        'Pagi itu hujan turun deras sehingga Dita membawa payung saat keluar rumah. Sesampainya di lobi, ia membeli segelas kopi hangat untuk menambah fokus. Namun saat hendak mencetak laporan di kantor, printer mendadak macet karena kertas tersangkut. Sambil menunggu teknisi datang, Dita makan sebuah pisang untuk mengganjal perut. Setelah itu, ia mengambil kunci ruang arsip dan langsung naik lift menuju lantai lima.',
+    },
+    {
+      theme: 'Inspeksi Lapangan & Kejadian Tak Terduga',
+      words: ['helm proyek', 'rompi', 'senter', 'ember', 'lakban', 'laporan'],
+      sampleParagraph:
+        'Sebelum memasuki area proyek, Ari wajib mengenakan helm proyek sebagai pelindung utama. Ia lalu memakai rompi reflektif agar mudah terlihat dari kejauhan. Karena sudut gudang agak gelap, Ari menyalakan senter untuk memeriksa jalur pipa. Ternyata ada tetesan air kecil sehingga ia meletakkan ember tepat di bawahnya. Untuk penanganan sementara, Ari menempelkan lakban kuat di sambungan pipa lalu mencatat temuannya ke dalam laporan.',
+    },
+  ],
+  Hard: [
+    {
+      theme: '8 Kata Acak Lintas Domain',
+      words: ['koper', 'bawang', 'obeng', 'paspor', 'blender', 'taksi', 'colokan', 'obat flu'],
+      sampleParagraph:
+        'Menjelang keberangkatan ke luar kota, Sinta mulai mengemas pakaian ke dalam koper besar. Sebelum pergi ke bandara, ia sempat mengiris bawang untuk memasak makan malam keluarganya. Namun pegangan laci dapur mendadak lepas sehingga Sinta mengambil obeng untuk mengencangkannya. Setelah urusan dapur beres, ia memasukkan paspor ke tas kecil agar tidak tertinggal. Karena ingin minum jus cepat, ia menyalakan blender di meja dapur, tetapi menyadari colokan listriknya longgar. Setelah selesai, ia segera memesan taksi online dan tidak lupa membawa obat flu untuk berjaga-jaga selama perjalanan.',
+    },
+    {
+      theme: '8 Kata Kontras (Teknologi, Pasar & Darurat)',
+      words: ['modem', 'timbangan', 'handuk', 'tiket', 'oli', 'pensil', 'botol minum', 'kamera'],
+      sampleParagraph:
+        'Pagi itu jaringan kantor terganggu sehingga teknisi memeriksa modem di ruang server. Di saat yang sama, petugas logistik memakai timbangan untuk mengecek berat paket kiriman. Karena berkeringat saat mengangkat barang, ia menyeka wajahnya dengan handuk bersih. Di meja resepsionis, kurir menyerahkan tiket pengiriman sekaligus memeriksa botol oli cadangan untuk motor operasional. Agar tidak lupa jadwal, ia mencatat nomor resi dengan pensil, meneguk air dari botol minum, lalu memotret bukti serah terima memakai kamera.',
+    },
+  ],
+};
+
+const scStatus = document.getElementById('sc-status');
+const scKeywordsBox = document.getElementById('sc-keywords-box');
+const scStepsContainer = document.getElementById('sc-steps-container');
+const scParagraphBox = document.getElementById('sc-paragraph-box');
+const scParagraphInput = document.getElementById('sc-paragraph-input');
+const scRecallBox = document.getElementById('sc-recall-box');
+const scRecallInput = document.getElementById('sc-recall-input');
+const scFeedback = document.getElementById('sc-feedback');
+const scRoundEl = document.getElementById('sc-round');
+const scScoreEl = document.getElementById('sc-score');
+const scStartBtn = document.getElementById('sc-start-btn');
+const scSpeakBtn = document.getElementById('sc-speak-btn');
+const scRecallToggleBtn = document.getElementById('sc-recall-toggle-btn');
+
+function resetStoryChainLabView() {
+  if (!labStoryChain) return;
+  scKeywordsBox.hidden = true;
+  scStepsContainer.hidden = true;
+  scParagraphBox.hidden = true;
+  scRecallBox.hidden = true;
+  scFeedback.hidden = true;
+  scSpeakBtn.hidden = true;
+  scRecallToggleBtn.hidden = true;
+  scStatus.innerHTML = 'Klik <strong>Mulai Tantangan</strong> untuk mendapatkan deretan kata kunci, lalu rangkai 1 kalimat per kata &amp; satukan jadi 1 paragraf utuh.';
+}
+
+document.querySelectorAll('#sc-level-pills .chip-btn').forEach((btn) => {
+  btn.addEventListener('click', () => {
+    scLevel = btn.dataset.scLevel;
+    document.querySelectorAll('#sc-level-pills .chip-btn').forEach((b) => b.classList.remove('active'));
+    btn.classList.add('active');
+    startStoryChainRound();
+  });
+});
+
+function startStoryChainRound() {
+  if (!labStoryChain) return;
+  const pool = STORY_CHAIN_BANK[scLevel] || STORY_CHAIN_BANK.Low;
+  scCurrentSet = pool[(scRound - 1) % pool.length];
+  scStatus.innerHTML = `Tema: <strong>${scCurrentSet.theme}</strong> • Rangkai <strong>${scCurrentSet.words.length} kata kunci</strong> di bawah menjadi kalimat berurutan, lalu gabungkan jadi <strong>1 paragraf cerita utuh</strong>.`;
+
+  scKeywordsBox.innerHTML = scCurrentSet.words
+    .map((w, idx) => `<span class="sc-keyword-chip">${idx + 1}. ${w}</span>`)
+    .join('');
+  scKeywordsBox.hidden = false;
+
+  scStepsContainer.innerHTML = '';
+  scStepInputs = scCurrentSet.words.map((word, idx) => {
+    const row = document.createElement('div');
+    row.className = 'sc-step-row';
+    const label = document.createElement('div');
+    label.className = 'sc-step-label';
+    label.textContent = `${idx + 1}. ${word.charAt(0).toUpperCase() + word.slice(1)} —`;
+
+    const wrap = document.createElement('div');
+    wrap.className = 'sc-step-input-wrap';
+
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.className = 'text-input';
+    input.placeholder = `Buat 1 kalimat yang memakai kata "${word}"...`;
+
+    const micBtn = document.createElement('button');
+    micBtn.type = 'button';
+    micBtn.className = 'btn-secondary';
+    micBtn.textContent = '🎙️';
+    micBtn.title = `Dikte kalimat untuk "${word}"`;
+    micBtn.addEventListener('click', () => startMicDictation(input, currentLang === 'en' ? 'en-US' : 'id-ID'));
+
+    wrap.appendChild(input);
+    wrap.appendChild(micBtn);
+    row.appendChild(label);
+    row.appendChild(wrap);
+    scStepsContainer.appendChild(row);
+    return input;
+  });
+
+  scStepsContainer.hidden = false;
+  scParagraphInput.value = '';
+  scParagraphBox.hidden = false;
+  scRecallInput.value = '';
+  scRecallBox.hidden = true;
+  scFeedback.hidden = true;
+  scSpeakBtn.hidden = false;
+  scRecallToggleBtn.hidden = false;
+}
+
+if (scStartBtn) scStartBtn.addEventListener('click', startStoryChainRound);
+
+if (scSpeakBtn) {
+  scSpeakBtn.addEventListener('click', () => {
+    if (!scCurrentSet) return;
+    const listText = scCurrentSet.words.join(' ... ');
+    speakText(`Dengarkan dan kunci urutannya, saya ulang tiga kali. Pertama: ${listText}. Kedua: ${listText}. Ketiga: ${listText}.`, 'id-ID', 0.9, 1.05, 'F');
+  });
+}
+
+document.getElementById('sc-stitch-btn')?.addEventListener('click', () => {
+  const sentences = scStepInputs
+    .map((inp) => inp.value.trim())
+    .filter(Boolean)
+    .map((s) => (/[.!?]$/.test(s) ? s : `${s}.`));
+  if (!sentences.length) {
+    showToast('Isi dulu minimal 1 kalimat di Langkah 1 ya!');
+    return;
+  }
+  scParagraphInput.value = sentences.join(' ');
+  showToast('⚡ Draf paragraf digabung! Rapikan kata sambungnya jika perlu.');
+});
+
+document.getElementById('sc-paragraph-mic-btn')?.addEventListener('click', () => {
+  startMicDictation(scParagraphInput, currentLang === 'en' ? 'en-US' : 'id-ID');
+});
+
+document.getElementById('sc-submit-btn')?.addEventListener('click', () => {
+  if (!scCurrentSet) return;
+  const paragraph = scParagraphInput.value.trim();
+  const stepLines = scStepInputs.map((inp) => inp.value.trim());
+  const filledSteps = stepLines.filter(Boolean).length;
+  const targetText = (paragraph || stepLines.join(' ')).toLowerCase();
+
+  if (!targetText) {
+    showToast('Tulis atau rekam dulu kalimat & paragraf ceritanya!');
+    return;
+  }
+
+  let matchedWords = 0;
+  let lastIdx = -1;
+  let inOrderCount = 0;
+  const missingWords = [];
+
+  scCurrentSet.words.forEach((w) => {
+    const pos = targetText.indexOf(w.toLowerCase());
+    if (pos !== -1) {
+      matchedWords++;
+      if (pos >= lastIdx) {
+        inOrderCount++;
+        lastIdx = pos;
+      }
+    } else {
+      missingWords.push(w);
+    }
+  });
+
+  const connectors = ['setelah', 'namun', 'karena', 'sehingga', 'sebelum', 'lalu', 'kemudian', 'akibatnya', 'akhirnya', 'agar', 'sambil', 'after', 'however', 'because', 'before', 'then'];
+  const usedConnectors = connectors.filter((c) => targetText.includes(c));
+
+  const totalWords = scCurrentSet.words.length;
+  const wordScore = Math.round((matchedWords / totalWords) * 50);
+  const orderScore = Math.round((inOrderCount / totalWords) * 25);
+  const flowScore = Math.min(25, (paragraph.length >= 40 ? 10 : 4) + Math.min(3, usedConnectors.length) * 5);
+  const roundScore = Math.min(100, wordScore + orderScore + flowScore);
+
+  scScore += roundScore;
+  scRound += 1;
+  scRoundEl.textContent = String(scRound);
+  scScoreEl.textContent = String(scScore);
+
+  const xpEarned = roundScore >= 70 ? (scLevel === 'Hard' ? 40 : scLevel === 'Medium' ? 30 : 20) : 10;
+  recordGameSession('Story Chain Memory', currentModule.skill, scLevel, roundScore, xpEarned);
+
+  scFeedback.innerHTML = `
+    <div class="ar-score-row">
+      <span class="ar-badge ${roundScore >= 75 ? 'good' : 'warn'}">Skor Rantai Cerita: ${roundScore}/100</span>
+      <span>Kata Kunci: <strong>${matchedWords}/${totalWords}</strong> • Urut: <strong>${inOrderCount}/${totalWords}</strong> • Langkah 1 Terisi: <strong>${filledSteps}/${totalWords}</strong></span>
+    </div>
+    ${missingWords.length ? `<p class="ar-miss">⚠️ Kata yang belum masuk: <strong>${missingWords.join(', ')}</strong></p>` : '<p class="ar-good">✅ Semua kata kunci berhasil dirangkai lengkap!</p>'}
+    <p><strong>🔗 Kata Transisi Terdeteksi:</strong> ${usedConnectors.length ? usedConnectors.join(', ') : 'Belum terdeteksi (coba pakai: <em>setelah, namun, karena, sehingga, sebelum</em>)'}</p>
+    <details class="ar-sample-box">
+      <summary>✨ Lihat Contoh Paragraf Utuh (${scCurrentSet.theme})</summary>
+      <p>${scCurrentSet.sampleParagraph}</p>
+    </details>
+  `;
+  scFeedback.hidden = false;
+});
+
+if (scRecallToggleBtn) {
+  scRecallToggleBtn.addEventListener('click', () => {
+    const showRecall = scRecallBox.hidden;
+    scRecallBox.hidden = !showRecall;
+    scKeywordsBox.hidden = showRecall;
+    scStepsContainer.hidden = showRecall;
+    scParagraphBox.hidden = showRecall;
+    if (showRecall) scRecallInput.focus();
+  });
+}
+
+document.getElementById('sc-recall-mic-btn')?.addEventListener('click', () => {
+  startMicDictation(scRecallInput, currentLang === 'en' ? 'en-US' : 'id-ID');
+});
+
+document.getElementById('sc-recall-check-btn')?.addEventListener('click', () => {
+  if (!scCurrentSet) return;
+  const raw = scRecallInput.value.trim().toLowerCase();
+  if (!raw) return;
+  let lastPos = -1;
+  let recalled = 0;
+  scCurrentSet.words.forEach((w) => {
+    const pos = raw.indexOf(w.toLowerCase());
+    if (pos !== -1 && pos >= lastPos) {
+      recalled++;
+      lastPos = pos;
+    }
+  });
+  const pct = Math.round((recalled / scCurrentSet.words.length) * 100);
+  showToast(`🧠 Recall Urutan: ${recalled}/${scCurrentSet.words.length} kata benar (${pct}%)!`);
+});
 
 // --- LAB 1: MEMORY SPAN MATRIX (WITH AUDIO ID/EN & CONTEXT WORDS) ---
 let mgLevel = 'Low';

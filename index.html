@@ -23,7 +23,7 @@
         <img src="logo.png" alt="BrainForge.AI" class="brand-logo-img" />
         <span class="brand-text">
           <strong>BrainForge.AI <span class="pro-badge">PRO</span></strong>
-          <small>19 COGNITIVE, SPEAKING &amp; ANALYSIS GAMES</small>
+          <small>20 COGNITIVE, SPEAKING &amp; ANALYSIS GAMES</small>
         </span>
       </button>
 
@@ -56,7 +56,7 @@
         <p class="greeting" id="hero-greeting">👋 Halo! Siap upgrade kapasitas otak &amp; keluwesan bicara hari ini?</p>
         <h1>Pusat Latihan Otak, Bicara Terstruktur &amp; Analisis Teks</h1>
         <p class="subtitle">
-          <strong>19 game unik dalam 5 kategori</strong> berlevel <strong>Low / Medium / Hard</strong> — mainkan semua langsung di <strong>Web Lab Interaktif (Audio Multi-Voice + Mic)</strong> atau luncurkan prompt adaptif ke <strong>Gemini &amp; ChatGPT</strong>.
+          <strong>20 game unik dalam 5 kategori</strong> berlevel <strong>Low / Medium / Hard</strong> — mainkan semua langsung di <strong>Web Lab Interaktif (Audio Multi-Voice + Mic)</strong> atau luncurkan prompt adaptif ke <strong>Gemini &amp; ChatGPT</strong>.
         </p>
       </div>
 
@@ -349,7 +349,7 @@
         </div>
       </div>
 
-      <!-- PANEL 2: INTERACTIVE WEB LAB (Mendukung Seluruh 19 Game!) -->
+      <!-- PANEL 2: INTERACTIVE WEB LAB (Mendukung Seluruh 20 Game!) -->
       <div id="weblab-panel" class="workspace-body" hidden>
         <!-- LAB A: MEMORY SPAN MATRIX (Visual + Audio ID/EN + Context Words) -->
         <div class="minigame-card" id="lab-memory" hidden>
@@ -396,6 +396,64 @@
           <div class="mg-footer">
             <button type="button" class="btn-primary" id="mg-start-btn">▶ Mulai Ronde Baru</button>
             <span class="mg-rule-note">Low: 4 item • Medium: 6 item • Hard: 8 item (ketik urutan terbalik dari belakang!)</span>
+          </div>
+        </div>
+
+        <!-- LAB A2: STORY CHAIN MEMORY (Kata -> Kalimat per Kata -> 1 Paragraf Utuh) -->
+        <div class="minigame-card" id="lab-story-chain" hidden>
+          <div class="mg-controls">
+            <div class="mg-control-group">
+              <label>Level:</label>
+              <div class="mg-pills" id="sc-level-pills">
+                <button type="button" class="chip-btn active" data-sc-level="Low">Low (5 Kata)</button>
+                <button type="button" class="chip-btn" data-sc-level="Medium">Medium (6 Kata)</button>
+                <button type="button" class="chip-btn" data-sc-level="Hard">Hard (8 Kata)</button>
+              </div>
+            </div>
+            <div class="mg-score-box">
+              Ronde: <strong id="sc-round">1</strong> • Skor: <strong id="sc-score">0</strong>
+            </div>
+          </div>
+
+          <div class="mg-stage">
+            <p class="mg-status" id="sc-status">Klik <strong>Mulai Tantangan</strong> untuk mendapatkan deretan kata kunci, lalu rangkai kalimat berurutan &amp; satukan jadi 1 paragraf utuh.</p>
+            <div id="sc-keywords-box" class="sc-keywords-box" hidden></div>
+            <div id="sc-steps-container" class="sc-steps-container" hidden></div>
+
+            <div id="sc-paragraph-box" class="sc-paragraph-box" hidden>
+              <div class="sc-paragraph-head">
+                <label for="sc-paragraph-input"><strong>Langkah 2 — Gabungkan Jadi 1 Paragraf Cerita Utuh:</strong></label>
+                <button type="button" class="btn-secondary btn-sm" id="sc-stitch-btn">⚡ Gabung Draf</button>
+              </div>
+              <textarea
+                id="sc-paragraph-input"
+                class="text-input"
+                rows="4"
+                placeholder="Gabungkan kalimat di atas dengan kata sambung alami (Setelah memakai..., Namun karena..., Sebelum...)..."
+              ></textarea>
+              <div class="sc-action-row">
+                <button type="button" class="btn-secondary" id="sc-paragraph-mic-btn" title="Dikte paragraf pakai suara">🎙️ Rekam Paragraf</button>
+                <button type="button" class="btn-primary" id="sc-submit-btn">✅ Cek Rantai Cerita</button>
+              </div>
+            </div>
+
+            <div id="sc-recall-box" class="sc-recall-box" hidden>
+              <p><strong>🧠 Bonus Recall Check:</strong> Sebut/ketik ulang urutan kata kunci tadi tanpa melihat (pisahkan dengan spasi atau koma):</p>
+              <div class="mg-input-area">
+                <input type="text" id="sc-recall-input" class="text-input" placeholder="contoh: sabun shampo air bak mandi sikat gigi" autocomplete="off" />
+                <button type="button" class="btn-secondary" id="sc-recall-mic-btn" title="Jawab pakai suara">🎙️</button>
+                <button type="button" class="btn-primary" id="sc-recall-check-btn">Cek Recall</button>
+              </div>
+            </div>
+
+            <div id="sc-feedback" class="ar-feedback" hidden></div>
+          </div>
+
+          <div class="mg-footer">
+            <button type="button" class="btn-primary" id="sc-start-btn">▶ Mulai Tantangan</button>
+            <button type="button" class="btn-secondary" id="sc-speak-btn" hidden>🔊 Bacakan Kata (3×)</button>
+            <button type="button" class="btn-secondary" id="sc-recall-toggle-btn" hidden>🧠 Uji Recall Kata</button>
+            <span class="mg-rule-note">Pola: Kata Kunci → 1 Kalimat/Kata → 1 Paragraf Utuh dengan transisi sebab-akibat.</span>
           </div>
         </div>
 
