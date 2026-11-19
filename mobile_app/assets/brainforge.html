@@ -1671,19 +1671,24 @@ body.in-flutter-app .nav-inner {
 /* Toast */
 .toast {
   position: fixed;
-  bottom: 24px;
+  bottom: 16px;
   left: 50%;
-  transform: translateX(-50%) translateY(16px);
-  background: #0f172a;
+  transform: translateX(-50%) translateY(12px);
+  background: rgba(15, 23, 42, 0.94);
   color: #fff;
-  padding: 10px 18px;
-  border-radius: 999px;
-  font-size: 13px;
-  font-weight: 600;
+  padding: 7px 12px;
+  border-radius: 8px;
+  font-size: 12px;
+  line-height: 1.35;
+  font-weight: 500;
+  width: max-content;
+  max-width: min(90vw, 380px);
+  text-align: center;
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.25);
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.2s, transform 0.2s;
-  z-index: 60;
+  transition: opacity 0.18s, transform 0.18s;
+  z-index: 260;
 }
 
 .toast.show {
