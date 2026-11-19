@@ -1,6 +1,6 @@
 # Daftar Lengkap Master Prompt 21 Games BrainForge.AI Pro
 
-*(Diurutkan dari Prioritas **★★★★★ Bintang 5** sampai **★☆☆☆☆ Bintang 1**, selaras dengan [analisis_19_games_brainforge.md](analisis_19_games_brainforge.md))*
+*(Diurutkan dari Prioritas **★★★★★ Bintang 5** sampai **★☆☆☆☆ Bintang 1**, selaras dengan [analisis_21_games_brainforge.md](analisis_21_games_brainforge.md))*
 
 Setiap prompt di bawah dihasilkan langsung dari mesin perakit prompt (`prompts.js` → `buildAdvancedPrompt`) dengan contoh parameter default: **Level `Low`**, **Bahasa `ID`**, **Gaya Coach `Tutor Santai`**, **3 Ronde**, dan **Mode Interaksi Utama** masing-masing game.
 
