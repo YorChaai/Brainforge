@@ -1,24 +1,25 @@
 @echo off
 cd /d "%~dp0.."
 echo ==========================================
-echo MEMBANGUN APLIKASI WINDOWS (.exe)
+echo 1. SINKRONISASI BUNDLE HTML STANDALONE
 echo ==========================================
-call flutter build windows --release
+call python build_standalone.py
 echo.
 
 echo ==========================================
-echo MEMBANGUN APLIKASI ANDROID (.apk)
+echo 2. MEMBANGUN APLIKASI ANDROID (.apk)
 echo ==========================================
+cd /d "%~dp0..\mobile_app"
 call flutter build apk --release
 echo.
 
 echo ==========================================
 echo PROSES BUILD SELESAI!
 echo ==========================================
-echo File Windows (.exe) tersimpan di:
-echo build\windows\x64\runner\Release\
-echo.
 echo File Android (.apk) tersimpan di:
-echo build\app\outputs\flutter-apk\app-release.apk
+echo mobile_app\build\app\outputs\flutter-apk\app-release.apk
+echo.
+echo File Web Standalone tersimpan di:
+echo BrainForge_HP_Standalone.html
 echo ==========================================
 pause
