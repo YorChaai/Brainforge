@@ -2064,13 +2064,13 @@ body.in-flutter-app .nav-inner {
       <!-- Category Filter & Custom Module Button -->
       <div class="toolbar-row">
         <div class="category-tabs" id="category-tabs">
-          <button type="button" class="cat-tab active" data-cat="all">Semua Game (19)</button>
-          <button type="button" class="cat-tab" data-cat="core">🧠 4 Inti (Memory &amp; Recall)</button>
+          <button type="button" class="cat-tab active" data-cat="all">Semua Game (21)</button>
+          <button type="button" class="cat-tab" data-cat="core">🧠 6 Inti (Memory &amp; Recall)</button>
           <button type="button" class="cat-tab" data-cat="social">💬 Latihan Bicara &amp; Sosial (4)</button>
           <button type="button" class="cat-tab" data-cat="cognitive">⚡ Logika &amp; Deep Thinking (4)</button>
           <button type="button" class="cat-tab" data-cat="language">🗣️ Bahasa &amp; English (4)</button>
           <button type="button" class="cat-tab" data-cat="analysis">🔬 Analisis Teks &amp; Transkrip (3)</button>
-          <button type="button" class="cat-tab" data-cat="custom">✨ Modul Buatanku</button>
+          <button type="button" class="cat-tab" data-cat="custom">✨ Modul Buatanku (0)</button>
         </div>
         <button type="button" class="btn-secondary btn-sm" id="open-custom-modal-btn">
           + Buat Modul Sendiri
@@ -2079,8 +2079,8 @@ body.in-flutter-app .nav-inner {
 
       <!-- Personalized Priority Star Filter -->
       <div class="star-filter-row" id="star-filter-tabs" aria-label="Filter Prioritas Bintang">
-        <button type="button" class="star-tab active" data-star="all">⭐ Semua Bintang (19)</button>
-        <button type="button" class="star-tab" data-star="5">★★★★★ Wajib (7)</button>
+        <button type="button" class="star-tab active" data-star="all">⭐ Semua Bintang (21)</button>
+        <button type="button" class="star-tab" data-star="5">★★★★★ Wajib (9)</button>
         <button type="button" class="star-tab" data-star="4">★★★★☆ Disarankan (4)</button>
         <button type="button" class="star-tab" data-star="3">★★★☆☆ Opsional (3)</button>
         <button type="button" class="star-tab" data-star="2">★★☆☆☆ Selingan (2)</button>
@@ -10123,7 +10123,6 @@ Sapa **${safeName}** dan langsung jalankan protokol **Level ${level}**!`;
 Sapa **${safeName}**, jelaskan aturan **Level ${level}** secara singkat, dan langsung berikan tantangan **Ronde 1** dari **${rounds} Ronde** tentang **"${safeTopic}"**!`;
   }
 }
-
 </script>
   <script>
 const STORAGE_KEY = 'brainforge_pro_state_v2';
@@ -10419,8 +10418,65 @@ function getInteractionBadge(mod) {
     : { label: '💬🎙️ Both (Text)', cls: 'mode-both-text' };
 }
 
+function updateDynamicModuleCounts(allMods) {
+  const total = allMods.length;
+  const catCounts = { core: 0, social: 0, cognitive: 0, language: 0, analysis: 0, custom: 0 };
+  const starCounts = { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 };
+
+  allMods.forEach((m) => {
+    if (m.isCustom) {
+      catCounts.custom++;
+    } else if (catCounts[m.category] != null) {
+      catCounts[m.category]++;
+    }
+    const s = getModuleStarPriority(m);
+    if (starCounts[s] != null) {
+      starCounts[s]++;
+    }
+  });
+
+  const catLabels = {
+    all: `Semua Game (${total})`,
+    core: `🧠 ${catCounts.core} Inti (Memory & Recall)`,
+    social: `💬 Latihan Bicara & Sosial (${catCounts.social})`,
+    cognitive: `⚡ Logika & Deep Thinking (${catCounts.cognitive})`,
+    language: `🗣️ Bahasa & English (${catCounts.language})`,
+    analysis: `🔬 Analisis Teks & Transkrip (${catCounts.analysis})`,
+    custom: `✨ Modul Buatanku (${catCounts.custom})`,
+  };
+
+  document.querySelectorAll('#category-tabs .cat-tab').forEach((btn) => {
+    const key = btn.dataset.cat;
+    if (catLabels[key]) btn.textContent = catLabels[key];
+  });
+
+  const starLabels = {
+    all: `⭐ Semua Bintang (${total})`,
+    5: `★★★★★ Wajib (${starCounts[5]})`,
+    4: `★★★★☆ Disarankan (${starCounts[4]})`,
+    3: `★★★☆☆ Opsional (${starCounts[3]})`,
+    2: `★★☆☆☆ Selingan (${starCounts[2]})`,
+    1: `★☆☆☆☆ Lewati Dulu (${starCounts[1]})`,
+  };
+
+  document.querySelectorAll('#star-filter-tabs .star-tab').forEach((btn) => {
+    const key = btn.dataset.star;
+    if (starLabels[key]) btn.textContent = starLabels[key];
+  });
+
+  const brandSmall = document.querySelector('.brand-text small');
+  if (brandSmall) {
+    brandSmall.textContent = `${total} COGNITIVE, SPEAKING & ANALYSIS GAMES`;
+  }
+  const heroFirstStrong = document.querySelector('.hero .subtitle strong');
+  if (heroFirstStrong) {
+    heroFirstStrong.textContent = `${total} game unik dalam 5 kategori`;
+  }
+}
+
 function renderDashboard() {
   const allMods = getAllModules();
+  updateDynamicModuleCounts(allMods);
   const filtered = allMods.filter((m) => {
     const catMatch =
       activeCategory === 'all'
@@ -10478,7 +10534,7 @@ function renderDashboard() {
 
 function renderHistory() {
   if (!state.history.length) {
-    historyList.innerHTML = `<div class="history-empty">Belum ada sesi tercatat. Pilih salah satu dari 19 game di atas atau mulai Sirkuit Latihan!</div>`;
+    historyList.innerHTML = `<div class="history-empty">Belum ada sesi tercatat. Pilih salah satu dari ${getAllModules().length} game di atas atau mulai Sirkuit Latihan!</div>`;
     return;
   }
 

@@ -1,4 +1,4 @@
-const CACHE_NAME = 'brainforge-pwa-v37';
+const CACHE_NAME = 'brainforge-pwa-v38';
 const ASSETS = [
   './',
   './index.html',
