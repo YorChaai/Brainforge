@@ -23,7 +23,7 @@
         <img src="logo.png" alt="BrainForge.AI" class="brand-logo-img" />
         <span class="brand-text">
           <strong>BrainForge.AI <span class="pro-badge">PRO</span></strong>
-          <small>21 COGNITIVE, SPEAKING &amp; ANALYSIS GAMES</small>
+          <small id="brand-games-count">COGNITIVE, SPEAKING &amp; ANALYSIS GAMES</small>
         </span>
       </button>
 
@@ -56,7 +56,7 @@
         <p class="greeting" id="hero-greeting">👋 Halo! Siap upgrade kapasitas otak &amp; keluwesan bicara hari ini?</p>
         <h1>Pusat Latihan Otak, Bicara Terstruktur &amp; Analisis Teks</h1>
         <p class="subtitle">
-          <strong>21 game unik dalam 5 kategori</strong> berlevel <strong>Low / Medium / Hard</strong> — mainkan semua langsung di <strong>Web Lab Interaktif (Audio Multi-Voice + Mic)</strong> atau luncurkan prompt adaptif ke <strong>Gemini &amp; ChatGPT</strong>.
+          <strong id="hero-games-count">Game unik dalam 5 kategori</strong> berlevel <strong>Low / Medium / Hard</strong> — mainkan semua langsung di <strong>Web Lab Interaktif (Audio Multi-Voice + Mic)</strong> atau luncurkan prompt adaptif ke <strong>Gemini &amp; ChatGPT</strong>.
         </p>
       </div>
 
@@ -109,13 +109,13 @@
       <!-- Category Filter & Custom Module Button -->
       <div class="toolbar-row">
         <div class="category-tabs" id="category-tabs">
-          <button type="button" class="cat-tab active" data-cat="all">Semua Game (21)</button>
-          <button type="button" class="cat-tab" data-cat="core">🧠 6 Inti (Memory &amp; Recall)</button>
-          <button type="button" class="cat-tab" data-cat="social">💬 Latihan Bicara &amp; Sosial (4)</button>
-          <button type="button" class="cat-tab" data-cat="cognitive">⚡ Logika &amp; Deep Thinking (4)</button>
-          <button type="button" class="cat-tab" data-cat="language">🗣️ Bahasa &amp; English (4)</button>
-          <button type="button" class="cat-tab" data-cat="analysis">🔬 Analisis Teks &amp; Transkrip (3)</button>
-          <button type="button" class="cat-tab" data-cat="custom">✨ Modul Buatanku (0)</button>
+          <button type="button" class="cat-tab active" data-cat="all">Semua Game</button>
+          <button type="button" class="cat-tab" data-cat="core">🧠 Inti (Memory &amp; Recall)</button>
+          <button type="button" class="cat-tab" data-cat="social">💬 Latihan Bicara &amp; Sosial</button>
+          <button type="button" class="cat-tab" data-cat="cognitive">⚡ Logika &amp; Deep Thinking</button>
+          <button type="button" class="cat-tab" data-cat="language">🗣️ Bahasa &amp; English</button>
+          <button type="button" class="cat-tab" data-cat="analysis">🔬 Analisis Teks &amp; Transkrip</button>
+          <button type="button" class="cat-tab" data-cat="custom">✨ Modul Buatanku</button>
         </div>
         <button type="button" class="btn-secondary btn-sm" id="open-custom-modal-btn">
           + Buat Modul Sendiri
@@ -124,12 +124,12 @@
 
       <!-- Personalized Priority Star Filter -->
       <div class="star-filter-row" id="star-filter-tabs" aria-label="Filter Prioritas Bintang">
-        <button type="button" class="star-tab active" data-star="all">⭐ Semua Bintang (21)</button>
-        <button type="button" class="star-tab" data-star="5">★★★★★ Wajib (9)</button>
-        <button type="button" class="star-tab" data-star="4">★★★★☆ Disarankan (4)</button>
-        <button type="button" class="star-tab" data-star="3">★★★☆☆ Opsional (3)</button>
-        <button type="button" class="star-tab" data-star="2">★★☆☆☆ Selingan (2)</button>
-        <button type="button" class="star-tab" data-star="1">★☆☆☆☆ Lewati Dulu (3)</button>
+        <button type="button" class="star-tab active" data-star="all">⭐ Semua Bintang</button>
+        <button type="button" class="star-tab" data-star="5">★★★★★ Wajib</button>
+        <button type="button" class="star-tab" data-star="4">★★★★☆ Disarankan</button>
+        <button type="button" class="star-tab" data-star="3">★★★☆☆ Opsional</button>
+        <button type="button" class="star-tab" data-star="2">★★☆☆☆ Selingan</button>
+        <button type="button" class="star-tab" data-star="1">★☆☆☆☆ Lewati Dulu</button>
       </div>
 
       <!-- Module Cards Grid -->
@@ -349,7 +349,7 @@
         </div>
       </div>
 
-      <!-- PANEL 2: INTERACTIVE WEB LAB (Mendukung Seluruh 21 Game!) -->
+      <!-- PANEL 2: INTERACTIVE WEB LAB -->
       <div id="weblab-panel" class="workspace-body" hidden>
         <!-- LAB A: MEMORY SPAN MATRIX (Visual + Audio ID/EN + Context Words) -->
         <div class="minigame-card" id="lab-memory" hidden>
