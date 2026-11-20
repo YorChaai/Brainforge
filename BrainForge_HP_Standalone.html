@@ -3194,7 +3194,7 @@ const DEFAULT_MODULES = [
     levelSpecs: {
       Low: {
         techniqueFocus: 'Rumus Dasar: Dengar → Tangkap 1 Kata Kunci → Tanggapi → Tanyakan (Pola Tanggapan → Pertanyaan → Pengembangan).',
-        taskRule: 'Sebutkan kata kunci yang kamu tangkap dari ucapan lawan bicara, lalu buat 1 tanggapan + 2 pertanyaan pendek yang mudah dijawab.',
+        taskRule: 'Sebutkan 1 kata/frasa kunci yang kamu tangkap dari ucapan lawan bicara, lalu buat 1 tanggapan singkat + 1 pertanyaan lanjutan (Follow-up Question) yang mudah dijawab.',
         antiPattern: 'Hindari merespons hanya dengan "Oh gitu" atau "Mantap" yang mematikan percakapan.',
       },
       Medium: {
@@ -3239,9 +3239,9 @@ const DEFAULT_MODULES = [
     },
     levelSpecs: {
       Low: {
-        partnerBehavior: 'Lawan bicara ramah, hangat, dan menyapa duluan dengan pertanyaan terbuka (misal: "Eh, kamu sudah lama kerja di sini?").',
+        partnerBehavior: 'Lawan bicara ramah, hangat, dan menyapa duluan dengan kalimat pembuka yang langsung relevan dengan situasi/topik aktif (jangan membuka topik teknis/kerja dengan basa-basi yang tidak nyambung).',
         userGoal: 'Menjawab dengan jelas, tidak kaku, dan melempar minimal 1 pertanyaan balik.',
-        scoringRubric: 'Dievaluasi pada 3 indikator: (1) Kemampuan Merespons, (2) Kemampuan Mengembangkan Percakapan, (3) Daya Tarik Obrolan.',
+        scoringRubric: 'Dievaluasi pada 3 indikator: (1) Kemampuan Merespons (40%), (2) Kemampuan Mengembangkan Percakapan (35%), (3) Daya Tarik Obrolan (25%).',
       },
       Medium: {
         partnerBehavior: 'Lawan bicara santai namun memberikan jawaban sedang (1–2 kalimat), sehingga kamu harus aktif menggunakan Follow-up Question & Self-Disclosure.',
@@ -9165,10 +9165,25 @@ function sanitizePromptText(str) {
 
 function buildAdvancedPrompt(params) {
   let out = _buildRawAdvancedPrompt(params);
+  const safeTitle = params?.module?.title || 'Game Ini';
+  const safeName = (params?.userName || 'Dio').trim();
+  const safeRounds = params?.rounds || 3;
+
+  const closingSection = `\n\n---\n\n## 🏁 PENUTUPAN SESI (SETELAH ${safeRounds} RONDE SELESAI)\nSetelah seluruh **${safeRounds} ronde** tuntas, tampilkan rapor ringkas berisi:\n1. **📊 Skor Tiap Ronde & Rata-Rata Sesi (0–100)**.\n2. **💪 Kekuatan Utama ${safeName}** yang terlihat selama latihan.\n3. **🎯 1 Keterampilan Prioritas** yang paling perlu dipertajam berikutnya + **1 Rekomendasi Latihan** untuk sesi selanjutnya.`;
+
   if (params && params.interactionMode === 'voice') {
-    const safeTitle = params.module?.title || 'Game Ini';
-    const safeName = (params.userName || 'Dio').trim();
-    out += `\n\n> [!CAUTION]\n> **ATURAN WAJIB VOICE AI (JANGAN LANGSUNG KELUARKAN PARAGRAF / SOAL!)**:\n> Di respons pertamamu ini, **DILARANG** langsung mengeluarkan paragraf bacaan, dialog, atau soal Ronde 1!\n> Cukup sapa **${safeName}**, jelaskan singkat dalam 2–3 kalimat apa saja yang harus dilakukan di game **${safeTitle}** ini, lalu suruh **${safeName}** membuka/menyalakan **Voice AI / Dictate (🎙️)** dan mengucapkan: **"I'm ready to play ${safeTitle}"**.\n> **BERHENTI & TUNGGU** sampai **${safeName}** mengucapkan kalimat itu lewat suara — baru setelah itu mulai **Ronde 1**!`;
+    const voiceOpeningSection = `## 📋 ATURAN PEMBUKAAN MUTLAK (VOICE AI — TUNGGU TRIGGER DULU!)
+1. **DILARANG** langsung mengeluarkan paragraf bacaan, cerita, dialog, atau soal **Ronde 1** di balasan pertamamu! (Aturan ini mengesampingkan instruksi lain mana pun yang meminta langsung menampilkan Ronde 1).
+2. Di balasan pertamamu, cukup: (a) sapa **${safeName}**, (b) jelaskan singkat dalam 1–2 kalimat apa yang akan dilatih di **${safeTitle}** (Level **${params.level || 'Low'}**, **${safeRounds} Ronde**), lalu (c) minta **${safeName}** menyalakan **Voice AI / Dictate (🎙️)** dan mengucapkan: **"I'm ready to play ${safeTitle}"** (atau **"I'm ready to practice"**).
+3. **BERHENTI & TUNGGU** sampai **${safeName}** mengirim trigger tersebut (atau jika **${safeName}** langsung mengirim jawaban/meminta mulai, langsung proses tanpa menghukumnya) — baru setelah itu sajikan tantangan **Ronde 1**!${closingSection}`;
+
+    if (/## 📋 MULAI SESI SEKARANG[\s\S]*$/i.test(out)) {
+      out = out.replace(/## 📋 MULAI SESI SEKARANG[\s\S]*$/i, voiceOpeningSection);
+    } else {
+      out += `\n\n${voiceOpeningSection}`;
+    }
+  } else {
+    out += closingSection;
   }
   return sanitizePromptText(out);
 }
@@ -9196,35 +9211,44 @@ function _buildRawAdvancedPrompt({
   const langRule = getLanguageRule(lang);
   const isVoice = interactionMode === 'voice';
   const hintText = module.levelHints?.[level] || level;
+  const isSpeakingFocused =
+    module.skill === 'speaking' ||
+    module.category === 'social' ||
+    module.category === 'language' ||
+    module.id === 'story-echo-retell';
+
+  const drillRule = isSpeakingFocused
+    ? `**Fokus Koreksi & Drill Pengucapan (Maksimal 1–2 Koreksi Prioritas)**: Berikan maksimal 1–2 koreksi paling penting agar ${safeName} tidak kewalahan. Setiap kali ada kalimat penting yang dikoreksi, **minta ${safeName} mengucapkan ulang 1 kalimat perbaikan utama tersebut** sebelum lanjut ke giliran/ronde berikutnya.`
+    : `**Fokus Koreksi Memori & Fakta (Maksimal 1–2 Poin Prioritas)**: Utamakan audit ketepatan urutan, fakta, dan strategi pengingatan (chunking/asosiasi). Jangan mengubah setiap koreksi menjadi drill grammar yang menghambat alur ronde; minta pengucapan ulang hanya bila ${safeName} salah menangkap fakta kunci.`;
 
   const interactionBlock = isVoice
-    ? `- **Mode Interaksi**: 🎙️ **VOICE AI MODE (TUNGGU TRIGGER SUARA USER DULU!)**
-- **Protokol Wajib Pembukaan Voice AI**:
-  1. **JANGAN langsung memuntahkan paragraf bacaan, cerita, dialog, atau soal Ronde 1** di balasan pertamamu!
-  2. Di balasan pertamamu, cukup: (a) sapa ${safeName}, (b) jelaskan singkat dalam 2–3 kalimat apa saja yang akan dilakukan di game **${module.title}** ini (Level **${level}**, **${rounds} Ronde**), lalu (c) instruksikan dengan tegas:
-     _"👉 Sekarang buka/nyalakan **Voice AI / Dictate (🎙️)** di HP-mu, lalu ucapkan dengan suaramu: **'I'm ready to play ${module.title}'** (atau **'I'm ready to practice'**) untuk memulai!"_
-  3. **BERHENTI & TUNGGU** sampai ${safeName} benar-benar mengucapkan trigger suara tersebut. Baru setelah ${safeName} mengatakan **"I'm ready to play ..."**, langsung mulai **Ronde 1**!
-  4. Selama sesi suara berjalan: sampaikan 1 tantangan/pertanyaan per giliran secara ritmis, natural, dan enak didengar (hindari tabel visual rumit saat tanya-jawab lisan), tanpa basa-basi berlebih.
-  5. **Drill Pengucapan Wajib**: Setiap kali kamu mengoreksi kalimat ${safeName}, **WAJIB minta ${safeName} mengucapkan ulang kalimat yang sudah dikoreksi terlebih dahulu** sebelum lanjut ke pertanyaan/ronde berikutnya!`
-    : `- **Mode Interaksi**: 💬 **INTERACTIVE GAME CHAT (Terstruktur & Visual)**
-- **Aturan Tampilan**: Gunakan pemformatan Markdown yang rapi (heading, bullet points, tabel bila relevan, bold, dan quote block) agar sangat nyaman dibaca. **Dilarang keras membocorkan kunci jawaban sebelum ${safeName} menjawab!**`;
+    ? `- **Mode Interaksi**: 🎙️ **VOICE AI / DICTATION MODE (TUNGGU TRIGGER USER DULU!)**
+- **Mode Latihan**: **Practice Mode (Default: 3× Pengulangan Audio/Materi)**. *(Jika ${safeName} mengetik/mengucapkan **"Assessment Mode"** atau **"Tes 1x"**, bacakan materi 1 kali saja tanpa pengulangan dan tanpa petunjuk untuk menguji kemampuan murni).*
+- **Protokol Interaksi Suara**:
+  1. Pada balasan pertama, **jangan** langsung mengeluarkan soal Ronde 1 — sapa ${safeName}, jelaskan aturan singkat dalam 1–2 kalimat, dan tunggu trigger **"I'm ready to play ${module.title}"** (atau **"I'm ready to practice"**).
+  2. Sajikan **1 tantangan saja per ronde**, sampaikan secara ritmis dan natural (hindari tabel visual rumit saat tanya-jawab lisan), lalu berhenti menunggu jawaban ${safeName}.
+  3. ${drillRule}`
+    : `- **Mode Interaksi**: 💬 **INTERACTIVE GAME CHAT (Terstruktur & Visual — Langsung Mulai Ronde 1)**
+- **Aturan Tampilan & Umpan Balik**: Gunakan pemformatan Markdown yang rapi (heading, bullet points, bold, dan quote block). Berikan maksimal **1–2 koreksi prioritas** per giliran. **Dilarang keras membocorkan kunci jawaban, daftar kata kunci, atau rangkuman sebelum ${safeName} menjawab!**`;
 
   const masterHeader = `# 🧠 MASTER PROMPT: ${module.title.toUpperCase()} — LEVEL ${level.toUpperCase()}
-_(Sistem Latihan Kognitif, Komunikasi & Analisis Adaptif • BrainForge.AI Pro)_
+_(Sistem Latihan Kognitif, Komunikasi & Analisis Adaptif • BrainForge.AI Pro V2)_
 
 ---
 
-## 🎯 PROFIL PEMAIN & PARAMETER SESI
+## 🎯 PROFIL PEMAIN & PARAMETER SESI (GLOBAL ENGINE)
 
-- **Nama Pemain**: ${safeName} (Sapa dan panggil dengan nama **${safeName}**)
+- **Nama Pemain**: ${safeName} (Sapa secara wajar dan akrab dengan nama **${safeName}**)
 - **Modul Latihan**: **${module.title}** — _${module.description}_
 - **Keunikan Mekanisme Game Ini**: ${module.uniqueMechanic || module.description}
 - **${module.topicLabel || 'Topik / Konteks Fokus'}**: **${isSourceModule && rawTopic.length > 140 ? 'Lihat Teks Sumber di Bagian Bawah Prompt' : safeTopic}**
 - **Level Tantangan Aktif**: **${level}** (_${hintText}_)
-- **Target Durasi Sesi**: **${rounds} Ronde Bertahap**
-- **Sistem Adaptasi Performa (Dynamic Difficulty)**:
-  - Jika jawaban **${safeName}** mencapai skor **≥ 85**: naikkan kompleksitas/kedalaman secara organik di ronde berikutnya.
-  - Jika jawaban **${safeName}** masih di bawah **70**: bantu perbaiki celah pemahamannya terlebih dahulu dan berikan soal setara sebelum menaikkan beban.
+- **Target Durasi Sesi**: **${rounds} Ronde Bertahap** (Sajikan 1 tantangan per ronde, jangan melompat ke ronde berikutnya sebelum ${safeName} menjawab)
+- **Sistem Adaptasi Performa & Kunci Batas Level (Dynamic Difficulty)**:
+  - **Skor 85–100 (Penguasaan Kuat)**: Naikkan tipis **1 aspek tantangan** di ronde berikutnya, **tetapi WAJIB tetap berada di dalam batas beban Level ${level}** (dilarang meloncat dari Low ke Hard di tengah sesi!).
+  - **Skor 70–84 (Cukup Stabil)**: Pertahankan tingkat kesulitan saat ini dan latih aspek yang belum konsisten.
+  - **Skor 0–69 (Perlu Penguatan)**: Tunjukkan 1–2 celah utama dengan petunjuk singkat, lalu berikan soal setara sebelum menaikkan beban.
+- **Kejujuran Materi & Simulasi**: Jangan mengarang klaim klinis/IQ (skor adalah indikator performa tugas pada sesi ini). Untuk topik teknis/HSE/SOP tanpa dokumen sumber resmi dari ${safeName}, sajikan sebagai skenario simulasi latihan yang logis.
 - **Karakter & Gaya Coach AI**: ${persona.instruction}
 - **Aturan Bahasa**: ${langRule}
 ${interactionBlock}
@@ -9259,16 +9283,16 @@ Sapa **${safeName}**, jelaskan aturan **Level ${level}** secara singkat, dan lan
   switch (module.id) {
     case 'memory-span': {
       const deliveryNote = isVoice
-        ? `**ATURAN WAJIB PENGULANGAN SUARA (3× ULANG)**: Jangan membacakan deretan hanya 1 kali! Bacakan deretan item yang sama tersebut **sebanyak 3 KALI berturut-turut** dengan artikulasi pelan, jernih, dan jeda 1 detik antar-item (format suara: _"Dengarkan baik-baik, saya ulang 3 kali. Pertama: [item 1..N] ... Kedua: [item 1..N] ... Ketiga: [item 1..N]. Sekarang giliranmu, ulangi sesuai aturan Level ${level}!"_).`
+        ? `**ATURAN PENYAJIAN SUARA (DEFAULT PRACTICE MODE = 3× ULANG)**: Bacakan deretan item yang sama tersebut **sebanyak 3 KALI berturut-turut** dengan artikulasi pelan dan jelas (format suara: _"Dengarkan baik-baik, saya ulang 3 kali. Pertama: [item 1..N] ... Kedua: [item 1..N] ... Ketiga: [item 1..N]. Sekarang giliranmu, ulangi sesuai aturan Level ${level}!"_). *(Jika ${safeName} meminta **Assessment Mode**, bacakan 1 kali saja).*`
         : `Tampilkan deretan item di dalam blok kutipan, lalu tambahkan **8–10 baris blok teks transisi / pembatas visual** di bawahnya agar deretan tidak langsung terlihat saat ${safeName} mengetik di kolom chat (atau sarankan ${safeName} mengaktifkan Voice Mode / menggunakan Web Lab untuk penyembunyian otomatis).`;
       return `${masterHeader}
 
 ## 📐 SPESIFIKASI KHUSUS LEVEL ${level.toUpperCase()} (MEMORY SPAN MATRIX)
 
 > [!IMPORTANT]
-> **Fokus hanya pada aturan Level ${level} di bawah ini:**
+> **Fokus hanya pada aturan Level ${level} di bawah ini (jangan meloncat ke beban level lain):**
 
-1. **Kapasitas Beban Memori (Target Load)**: ${spec.targetLoad}
+1. **Kapasitas Beban Memori (Target Load)**: ${spec.targetLoad} ${level === 'Low' ? '(Gunakan 4 item pada Ronde 1–2, dan 5 item pada Ronde 3 bila dua ronde sebelumnya stabil).' : ''}
 2. **Aturan Rekonstruksi Urutan**: ${spec.taskRule}
 3. **Tingkat Gangguan / Distraksi**: ${spec.distractor}
 
@@ -9277,17 +9301,16 @@ Sapa **${safeName}**, jelaskan aturan **Level ${level}** secara singkat, dan lan
 ## 🏛️ PROTOKOL PERMAINAN (${rounds} RONDE BERTAHAP)
 
 ### Langkah 1 — Penyajian Deretan Memori
-- Buat deretan item (angka, kata, atau kombinasi angka + istilah terkait **"${safeTopic}"**) sesuai spesifikasi **Level ${level}**.
+- Buat deretan item baru di tiap ronde (angka atau kata konkret terkait **"${safeTopic}"**) sesuai spesifikasi **Level ${level}**.
 - ${deliveryNote}
-- Jika Level Medium/Hard, sisipkan kalimat transisi atau pertanyaan pengecoh singkat sesuai spesifikasi sebelum meminta jawaban akhir.
+- ${level === 'Low' ? 'Jangan menyisipkan pertanyaan pengecoh pada Level Low.' : 'Sisipkan kalimat transisi atau pertanyaan pengecoh singkat sesuai spesifikasi Level ' + level + ' sebelum meminta jawaban akhir.'}
 - **Berhenti di sini dan tunggu jawaban ${safeName}.**
 
-### Langkah 2 — Audit Ketepatan & Teknik Chunking
+### Langkah 2 — Audit Ketepatan Posisi & Teknik Chunking
 Setelah ${safeName} menjawab:
-1. Bandingkan jawaban ${safeName} **item demi item** terhadap urutan target yang benar.
-2. Berikan **📊 Skor Ronde (0–100)** berdasarkan ketepatan item dan posisinya.
-3. Berikan **💡 1 Teknik Chunking / Jembatan Keledai / Asosiasi Visual** singkat tentang cara paling mudah mengunci deretan tadi di Working Memory.
-4. Langsung sajikan **Ronde Berikutnya** (sampai tuntas ${rounds} ronde).
+1. **📊 Skor Ronde (0–100)**: Hitung dengan rumus **Jumlah item yang tepat pada posisi urutan yang tepat ÷ total seluruh item × 100** (item benar tetapi salah posisi tidak dihitung penuh). Sebutkan posisi pertama yang keliru bila ada.
+2. **💡 1 Teknik Chunking / Asosiasi Visual**: Berikan 1 cara paling praktis mengunci deretan tadi di Working Memory.
+3. Langsung sajikan **Ronde Berikutnya** (sampai tuntas ${rounds} ronde).
 
 ---
 
@@ -9297,7 +9320,7 @@ Sapa **${safeName}** dengan singkat, jelaskan aturan **Level ${level}** dalam 1 
 
     case 'story-chain-memory': {
       const deliveryNote = isVoice
-        ? `**ATURAN WAJIB SUARA (3× ULANG KATA KUNCI)**: Bacakan daftar kata kunci Ronde ini **sebanyak 3 KALI berturut-turut** dengan artikulasi pelan, jernih, dan jeda 1 detik antar-kata (contoh: _"Dengarkan dan kunci urutannya, saya ulang 3 kali: [kata 1 ... kata N]. Kedua: [kata 1 ... kata N]. Ketiga: [kata 1 ... kata N]. Sekarang giliranmu!"_). Setelah itu tunggu ${safeName} merangkai kalimat berantai per kata lalu menyatukannya menjadi 1 paragraf utuh.`
+        ? `**ATURAN WAJIB SUARA (3× ULANG KATA KUNCI)**: Bacakan daftar kata kunci Ronde ini **sebanyak 3 KALI berturut-turut** dengan artikulasi pelan dan jelas (contoh: _"Dengarkan dan kunci urutannya, saya ulang 3 kali: [kata 1 ... kata N]. Kedua: [kata 1 ... kata N]. Ketiga: [kata 1 ... kata N]. Sekarang giliranmu!"_). Setelah itu tunggu ${safeName} merangkai kalimat berantai per kata lalu menyatukannya menjadi 1 paragraf utuh.`
         : `Tampilkan daftar kata kunci berurutan (pisahkan dengan tanda \`-\`, contoh: \`sabun - shampo - air - bak mandi - sikat gigi\`). Minta ${safeName} menuliskan: **(1) Daftar kalimat per kata** lalu **(2) Gabungan 1 paragraf cerita utuh** dalam satu balasan!`;
 
       return `${masterHeader}
@@ -9327,36 +9350,36 @@ Sapa **${safeName}** dengan singkat, jelaskan aturan **Level ${level}** dalam 1 
 ## 🏛️ PROTOKOL PERMAINAN (${rounds} RONDE BERTAHAP)
 
 ### Langkah 1 — Sajikan Deretan Kata Kunci
-- Berikan deretan kata kunci yang **berbeda di setiap ronde** terkait tema **"${safeTopic}"** sesuai spesifikasi **Level ${level}** (JANGAN langsung membocorkan contoh ceritanya dulu!).
+- Berikan deretan kata kunci yang **berbeda di setiap ronde** terkait tema **"${safeTopic}"** sesuai spesifikasi **Level ${level}** (JANGAN memberikan contoh cerita yang memakai kata kunci ronde aktif sebelum ${safeName} menjawab!).
 - ${deliveryNote}
 - Ingatkan ${safeName} untuk mengirim **2 bagian**:
   1. **Kalimat Per Kata** (1 kalimat berurutan untuk tiap kata kunci, dengan transisi sebab-akibat/waktu).
   2. **1 Paragraf Cerita Utuh** (menggabungkan semua kalimat tadi agar mengalir mulus).
 - **Berhenti di sini dan tunggu jawaban ${safeName}.**
 
-### Langkah 2 — Audit Rantai Cerita & Versi Polish
+### Langkah 2 — Audit Rantai Cerita (Bobot Terukur) & Recall Check
 Setelah ${safeName} menjawab:
-1. **📊 Skor Story Chain (0–100)** berdasarkan 3 komponen:
-   - **Kelengkapan & Urutan Kata**: Apakah semua kata kunci muncul lengkap sesuai urutan dari awal hingga akhir?
-   - **Jembatan Sebab-Akibat**: Apakah kalimat ke kalimat saling terkait logis (bukan kalimat terpisah yang berdiri sendiri)?
-   - **Kelancaran Paragraf Utuh**: Apakah gabungan paragrafnya enak dibaca/didengar dengan kata transisi alami?
-2. **✨ Contoh Versi Lebih Hidup (Polish)**: Berikan 1 versi perbaikan singkat (per kata + paragraf utuh) hanya jika ada bagian yang terasa kaku atau putus logikanya${isVoice ? ' — dan jika ada kalimat yang dikoreksi, minta **' + safeName + '** mengucapkan ulang kalimat perbaikan itu terlebih dahulu' : ''}.
-3. **🧠 Bonus Recall Check**: ${level === 'Hard' ? 'Berikan 1 pertanyaan pengecoh singkat lalu minta ' + safeName + ' menyebut ulang urutan ke-8 kata kunci tanpa melihat catatannya!' : 'Ajak ' + safeName + ' menyebutkan ulang urutan kata kuncinya sekilas dari cerita yang baru ia buat, lalu lanjut ke **Ronde Berikutnya** (hingga tuntas ' + rounds + ' ronde).'}
+1. **📊 Skor Story Chain (0–100)** berdasarkan rubrik:
+   - **50% Kelengkapan & Urutan Kata**: Apakah semua kata kunci muncul lengkap sesuai urutan dari awal hingga akhir?
+   - **30% Jembatan Sebab-Akibat / Waktu**: Apakah kalimat ke kalimat saling terkait logis (terima variasi cerita kreatif yang masuk akal)?
+   - **20% Kelancaran Paragraf Utuh**: Apakah gabungan paragrafnya mengalir dan mudah dipahami?
+2. **✨ Poles Maksimal 1 Bagian Terpenting**: Berikan perbaikan singkat hanya pada 1 bagian yang paling terasa putus logikanya${isVoice ? ' (dan minta **' + safeName + '** mengucapkan ulang 1 kalimat perbaikan itu saja)' : ''}.
+3. **🧠 Bonus Recall Check**: ${level === 'Hard' ? 'Berikan 1 pertanyaan pengecoh singkat lalu minta ' + safeName + ' menyebut ulang urutan ke-8 kata kunci tanpa melihat catatannya!' : 'Minta ' + safeName + ' menyebutkan ulang urutan kata kunci tadi secara singkat, lalu lanjut ke **Ronde Berikutnya** (hingga tuntas ' + rounds + ' ronde).'}
 
 ---
 
 ## 📋 MULAI SESI SEKARANG
-Sapa **${safeName}** dengan singkat, jelaskan alur **Kata → Kalimat Per Kata → 1 Paragraf Utuh**, lalu mulai sesuai aturan mode interaksi di atas!`;
+Sapa **${safeName}** dengan singkat, jelaskan alur **Kata → Kalimat Per Kata → 1 Paragraf Utuh**, lalu sajikan kata kunci **Ronde 1**!`;
     }
 
     case 'story-echo-retell': {
       const deliveryNote = isVoice
-        ? `**ATURAN WAJIB 3× PEMBACAAN PARAGRAF UTUH**:
-  - Bacakan **1 PARAGRAF CERITA UTUH YANG SAMA** sebanyak **3 KALI BERTURUT-TURUT** secara lisan tanpa memotong atau memberi daftar kata kunci terpisah!
+        ? `**ATURAN WAJIB 3× PEMBACAAN PARAGRAF UTUH (PRACTICE MODE)**:
+  - Bacakan **1 PARAGRAF CERITA UTUH YANG SAMA** sebanyak **3 KALI BERTURUT-TURUT** secara lisan tanpa memotong atau memberi daftar kata kunci/rangkuman terlebih dahulu! *(Jika ${safeName} meminta **Assessment Mode**, bacakan 1 kali saja).*
   - Gunakan jeda singkat bertuliskan/berbunyi **_"ulang lagi"_** di antara pengulangan ke-1, ke-2, dan ke-3.
   - Contoh format penyampaian di Ronde:
     _"[Paragraf cerita utuh kalimat 1 sampai selesai] ... ulang lagi ... [Paragraf cerita utuh yang sama] ... ulang lagi ... [Paragraf cerita utuh yang sama]. Sekarang coba kamu ceritakan ulang apa saja yang tadi terjadi dengan kalimatmu sendiri!"_`
-        : `Tampilkan 1 paragraf cerita utuh sebanyak 3× di blok kutipan (atau berikan penanda _"ulang lagi"_), lalu tambahkan **8–10 baris pembatas visual** di bawahnya agar ${safeName} berlatih menceritakan ulang dari memori tanpa menyontek teks.`;
+        : `Tampilkan 1 paragraf cerita utuh sebanyak 3× di blok kutipan (dengan penanda _"ulang lagi"_), lalu tambahkan **8–10 baris pembatas visual** di bawahnya agar ${safeName} berlatih menceritakan ulang dari memori tanpa menyontek teks.`;
 
       return `${masterHeader}
 
@@ -9381,20 +9404,20 @@ Sapa **${safeName}** dengan singkat, jelaskan alur **Kata → Kalimat Per Kata �
 ### Langkah 1 — Bacakan 1 Paragraf Cerita Utuh Sebanyak 3×
 - Buat 1 paragraf cerita pendek yang hidup, jelas alur sebab-akibatnya, dan **berbeda di setiap ronde** seputar tema **"${safeTopic}"** sesuai **Level ${level}**.
 - ${deliveryNote}
-- **DILARANG** memberi daftar poin/kata kunci atau pertanyaan pilihan ganda dulu — biarkan ${safeName} bebas berbicara/menceritakan ulang apa saja yang ia ingat!
+- **DILARANG** memberi daftar poin/kata kunci, rangkuman, atau pertanyaan pilihan ganda sebelum ${safeName} selesai bercerita ulang!
 - **Berhenti di sini dan tunggu cerita ulang ${safeName}.**
 
-### Langkah 2 — Audit Alur Retelling & Detail yang Tertangkap
+### Langkah 2 — Audit Alur Retelling (Bobot Terukur)
 Setelah ${safeName} menceritakan ulang:
-1. **📊 Skor Retelling (0–100)**: Nilai ketepatan urutan kronologis kejadian, kelengkapan poin sebab-akibat, dan kelancaran penyampaian dengan kata-kata sendiri.
-2. **✅ Tertangkap vs ⚠️ Terlewat/Tertukar**: Sebutkan secara singkat poin mana yang sudah tepat diingat ${safeName} dan detail mana yang terlewat atau terbalik urutannya.
-3. **🗣️ Koreksi Kalimat (Bila Ada)**: Jika ada kalimat yang kurang jelas atau fakta yang terlewat${isVoice ? ', bantu rapikan 1 kalimat ringkas lalu **minta ' + safeName + ' mengucapkan ulang kalimat perbaikan tersebut** sebelum lanjut!' : ', berikan 1 versi ringkas yang rapi.'}
+1. **📊 Skor Retelling (0–100)** berdasarkan rubrik: **40% urutan kejadian**, **30% detail penting**, **20% hubungan sebab-akibat**, dan **10% kejelasan retelling**.
+2. **✅ Tertangkap vs ⚠️ Terlewat/Tertukar**: Sebutkan singkat poin mana yang sudah tepat dan detail mana yang terlewat atau terbalik urutannya.
+3. **🗣️ Koreksi Maksimal 1 Detail/Kalimat Utama**: Jika ada bagian krusial yang melenceng${isVoice ? ', rapikan dalam 1 kalimat ringkas lalu **minta ' + safeName + ' mengucapkan ulang 1 kalimat perbaikan tersebut** sebelum lanjut!' : ', berikan 1 kalimat perbaikan yang ringkas.'}
 4. Langsung lanjutkan ke **Ronde Berikutnya** (hingga tuntas ${rounds} ronde)!
 
 ---
 
 ## 📋 MULAI SESI SEKARANG
-Sapa **${safeName}** dengan singkat, jelaskan bahwa kamu akan membacakan 1 cerita pendek **3 kali berturut-turut** lalu ${safeName} tinggal menceritakan ulang bebas pakai kalimatnya sendiri, lalu ikuti aturan pembukaan di atas!`;
+Sapa **${safeName}** dengan singkat, jelaskan bahwa kamu akan membacakan 1 cerita pendek **3 kali berturut-turut** lalu ${safeName} tinggal menceritakan ulang bebas pakai kalimatnya sendiri, dan langsung mulai **Ronde 1**!`;
     }
 
     case 'active-recall': {
@@ -9403,8 +9426,8 @@ Sapa **${safeName}** dengan singkat, jelaskan bahwa kamu akan membacakan 1 cerit
 ## 📐 SPESIFIKASI KHUSUS LEVEL ${level.toUpperCase()} (ACTIVE RECALL READER)
 
 > [!IMPORTANT]
-> **Prinsip Testing Effect & Pemahaman Mendalam:**
-> Paragraf yang kamu buat untuk Level **${level}** harus kaya substansi, mengalir luwes (tidak kaku), dan memiliki mekanisme serta data yang jelas untuk diuji.
+> **Prinsip Retrieval & Pemahaman Bacaan:**
+> Latihan ini mengasah kemampuan mengambil kembali (*retrieval*) gagasan inti, hubungan sebab-akibat, dan fakta dari bacaan tanpa melihat teks (jangan mengarang fakta di luar bacaan atau menuntut angka jika bacaan tidak memuat angka).
 
 1. **Panjang & Format Bacaan**: ${spec.length}
 2. **Kedalaman Substansi Bacaan**: ${spec.depth}
@@ -9415,18 +9438,18 @@ Sapa **${safeName}** dengan singkat, jelaskan bahwa kamu akan membacakan 1 cerit
 ## 🏛️ PROTOKOL PERMAINAN (${rounds} RONDE BERTAHAP)
 
 ### Langkah 1 — Penyajian Bacaan Berkualitas Tinggi (Tanpa Bocoran Poin)
-1. Tulis bacaan orisinal yang menarik dan berbobot tentang **"${safeTopic}"** sesuai spesifikasi **Level ${level}** di atas.
-2. **DILARANG** menampilkan daftar poin kunci atau rangkuman di Langkah 1.
+1. Tulis 1 bacaan orisinal yang akurat dan berbobot tentang **"${safeTopic}"** sesuai spesifikasi **Level ${level}** di atas.
+2. **DILARANG** menampilkan daftar poin kunci atau rangkuman sebelum ${safeName} menjawab.
 3. Di bawah paragraf, berikan instruksi tegas:
-   _"Baca paragraf di atas dengan fokus penuh. Setelah selesai, **scroll layar ke bawah / tutup teksnya**, lalu jelaskan kembali seluruh konsep inti, mekanisme sebab-akibat, dan detail angkanya dengan bahasamu sendiri!"_
+   _"Baca paragraf di atas dengan fokus penuh. Setelah selesai, **scroll layar ke bawah / tutup teksnya**, lalu jelaskan kembali ide utama, mekanisme/alasan sebab-akibat, dan contoh/faktanya dengan bahasamu sendiri!"_
 4. **Berhenti dan tunggu jawaban ${safeName}.**
 
-### Langkah 2 — Audit Fakta Atomic & Umpan Balik Berlapis
+### Langkah 2 — Audit Retrieval & Pemahaman
 Setelah ${safeName} mengirimkan penjelasan ulangnya, bedah hasilnya dengan struktur ini:
-1. **📊 Skor Active Recall (0–100)**: Nilai ketepatan substansi, kelengkapan mekanisme sebab-akibat, serta detail angka/contoh.
-2. **✅ Konsep & Fakta yang Berhasil Ditangkap**: Rincikan poin mana saja yang sudah dijelaskan dengan tepat oleh ${safeName}.
-3. **⚠️ Detail Atomic yang Terlewat / Kurang Presisi**: Sebutkan fakta spesifik, angka + satuan + konteks, atau batasan dari teks asli yang belum masuk di jawaban ${safeName}.
-4. **💡 Rekonstruksi Ideal Singkat**: Tampilkan daftar poin kunci atomic yang sebenarnya terkandung dalam paragraf tadi.
+1. **📊 Skor Active Recall (0–100)** berdasarkan rubrik: **40% ketepatan konsep inti**, **30% hubungan sebab-akibat**, **20% kelengkapan fakta/contoh dari bacaan**, dan **10% kejelasan penjelasan**.
+2. **✅ Konsep & Fakta yang Berhasil Ditangkap**: Rincikan poin bacaan yang sudah dijelaskan dengan tepat (bedakan fakta bacaan dari asumsi luar).
+3. **⚠️ Celah Utama yang Terlewat (Maksimal 1–2 Poin)**: Sebutkan konsep/fakta spesifik dari teks asli yang belum masuk di jawaban ${safeName}.
+4. **💡 Poin Kunci Bacaan**: Tampilkan daftar ringkas gagasan inti yang terkandung dalam paragraf tadi.
 5. Lanjutkan ke **Ronde Berikutnya** dengan sub-topik baru yang masih berkaitan (hingga ${rounds} ronde).
 
 ---
@@ -9436,16 +9459,16 @@ Sapa **${safeName}** dengan hangat dan langsung sajikan teks bacaan **Ronde 1 (L
     }
 
     case 'listening-practice': {
-      const voiceCta = `_"👉 Klik ikon **Mode Suara / Dictate (🎙️)** di sebelah mikrofon, lalu ucapkan **'I'm ready to practice'** (atau langsung sebutkan rangkuman fakta yang kamu tangkap)!"_`;
       const modeHandling = isVoice
-        ? `Karena sedang dalam **Voice Mode**, setelah ${safeName} mengucapkan trigger suara **"I'm ready to play Listening Practice (Fakta Lisan)"**, **WAJIB bacakan naskah monolog/cerita tersebut sebanyak 3 KALI berturut-turut** (Pertama: tempo pelan & jelas; Kedua: tempo normal; Ketiga: penekanan pada angka/fakta kunci) agar ${safeName} tidak lupa sebelum menjawab!`
-        : `Sajikan naskah monolog/cerita pendek di dalam blok kutipan + tabel **Kosakata Penting** di bawahnya, lalu instruksikan ${safeName}: _"Klik tombol **Read Aloud / Dengarkan Suara** pada pesan ini (atau baca 1 kali saja dengan cepat tanpa mengulang), tutup teksnya, lalu tuliskan informasi penting yang kamu tangkap (atau klik ikon **Mode Suara / Dictate (🎙️)** dan bilang **'I'm ready to practice'** untuk masuk sesi tanya-jawab lisan)!"_`;
+        ? `Karena sedang dalam **Voice Mode**, setelah ${safeName} mengucapkan trigger suara **"I'm ready to play Listening Practice (Fakta Lisan)"**, **WAJIB bacakan naskah monolog/cerita tersebut sebanyak 3 KALI berturut-turut** (Pertama: tempo pelan & jelas; Kedua: tempo normal; Ketiga: penekanan pada angka/fakta kunci) agar ${safeName} dapat menangkap detailnya sebelum menjawab! *(Jika ${safeName} meminta **Assessment Mode**, bacakan 1 kali saja).*`
+        : `Sajikan naskah monolog/cerita pendek di dalam blok kutipan (TANPA tabel kosakata di awal), lalu instruksikan ${safeName}: _"Klik tombol **Read Aloud / Dengarkan Suara** pada pesan ini (atau baca 1 kali lalu tutup teksnya), kemudian sebutkan/tuliskan fakta penting yang kamu tangkap!"_`;
       return `${masterHeader}
 
 ## 📐 SPESIFIKASI KHUSUS LEVEL ${level.toUpperCase()} (LISTENING PRACTICE)
 
 > [!IMPORTANT]
-> Latihan ini menguji ketajaman menangkap fakta eksplisit, angka+satuan+konteks, serta mendeteksi koreksi/ralat informasi lisan tentang **"${safeTopic}"**.
+> Latihan ini menguji ketajaman menangkap fakta eksplisit, angka + satuan + konteks, serta mendeteksi koreksi/ralat informasi lisan tentang **"${safeTopic}"**.
+> **Aturan Anti-Bocoran**: **DILARANG** menampilkan daftar kosakata atau istilah kunci sebelum ${safeName} menjawab, agar tidak menjadi petunjuk yang membocorkan isi audio!
 
 1. **Karakteristik Naskah Audio**: ${spec.audioStyle}
 2. **Kepadatan Informasi**: ${spec.density}
@@ -9453,38 +9476,37 @@ Sapa **${safeName}** dengan hangat dan langsung sajikan teks bacaan **Ronde 1 (L
 
 ---
 
-## 🏛️ PROTOKOL 2 BAGIAN (${rounds} RONDE / PERTANYAAN)
+## 🏛️ PROTOKOL 2 BAGIAN (${rounds} RONDE BERTAHAP)
 
-### BAGIAN A — PENYAJIAN MONOLOG / CERITA LISTENING
-- Buat cerita atau monolog lisan yang realistis, natural, dan kaya fakta tentang **"${safeTopic}"** sesuai spesifikasi **Level ${level}** (4–8 kalimat untuk Low/Medium, 8–15 kalimat padat fakta untuk Hard).
-- Di bawah cerita, tampilkan tabel ringkas **Kosakata / Istilah Kunci** yang muncul di naskah beserta artinya.
+### BAGIAN A — PENYAJIAN MONOLOG / BRIEFING LISTENING (TANPA PETUNJUK KOSAKATA)
+- Buat naskah monolog/briefing baru di setiap ronde yang realistis, natural, dan kaya fakta tentang **"${safeTopic}"** sesuai spesifikasi **Level ${level}**.
+- **Jangan** tampilkan tabel kosakata atau rangkuman fakta di Bagian A!
 - ${modeHandling}
 - **Berhenti dan tunggu respons ${safeName}.**
 
-### BAGIAN B — VERIFIKASI & SPEAKING CHALLENGE (SATU PER SATU)
-Setelah ${safeName} merespons atau mengatakan **"I'm ready to practice"**:
-1. Jika ${safeName} sudah menuliskan/menyebutkan fakta yang ditangkap: berikan **✅ Verifikasi Fakta Eksplisit** & **📊 Skor Listening (0–100)** + daftar **Fakta Atomic yang Terlewat**.
-2. Ajukan pertanyaan pemahaman isi cerita **satu per satu** (jangan ditumpuk) hingga **${rounds} ronde**:
-   - Kalau jawaban ${safeName} kurang tepat, koreksi berdasarkan isi naskah asli dan berikan versi kalimat jawaban yang benar/natural.
-   - **Drill Ucap Ulang Wajib**: Jika ada koreksi kalimat/grammar, minta ${safeName} mengucapkan ulang kalimat koreksi yang benar sebelum pindah ke pertanyaan berikutnya!
-   - Jika cerita topik pertama sudah tuntas dan masih ada ronde tersisa, sajikan naskah audio baru untuk ronde selanjutnya.
+### BAGIAN B — VERIFIKASI FAKTA, ISTILAH KUNCI & PERTANYAAN PEMAHAMAN
+Setelah ${safeName} menyebutkan fakta yang ia tangkap:
+1. **📊 Skor Listening (0–100)** berdasarkan rubrik: **60% ketepatan fakta eksplisit**, **25% akurasi angka/satuan/konteks**, dan **15% urutan atau deteksi ralat/koreksi**. (Jangan menilai detail yang tidak pernah disebutkan di dalam naskah).
+2. **✅ Fakta Tertangkap vs ⚠️ Fakta Terlewat**: Tunjukkan fakta mana yang tepat dan maksimal 1–2 fakta penting yang terlewat/tertukar.
+3. **📖 Istilah / Kosakata Kunci**: Baru tampilkan daftar ringkas istilah/kosakata penting dari naskah tadi beserta artinya **setelah** ${safeName} selesai menjawab.
+4. Ajukan **maksimal 1 pertanyaan pemahaman lanjutan** (atau jika sudah terjawab lengkap, langsung sajikan naskah audio baru untuk **Ronde Berikutnya** hingga **${rounds} ronde** tuntas).
 
 ---
 
 ## 📋 MULAI SESI SEKARANG
-Langsung jalankan **BAGIAN A** (tampilkan cerita/monolog **Ronde 1 (Level ${level})** tentang **"${safeTopic}"** + tabel Kosakata Penting + instruksi Mode Suara/Dictate)!`;
+Langsung jalankan **BAGIAN A** untuk **Ronde 1 (Level ${level})** tentang **"${safeTopic}"** (tanpa membocorkan tabel kosakata di awal)!`;
     }
 
     case 'recall-percakapan': {
       const voiceNote = isVoice
-        ? `\n- **ATURAN WAJIB SUARA (3× ULANG)**: Setelah ${safeName} mengucapkan trigger suara **"I'm ready to play Recall Percakapan (Dialog 2 Orang)"**, **WAJIB bacakan dialog 2 karakter tersebut sebanyak 3 KALI berturut-turut** (dengan pembedaan intonasi 2 tokoh yang jelas dan jeda antar-putaran) agar ${safeName} benar-benar menangkap alur, angka, dan perubahan rencananya sebelum menjawab!`
+        ? `\n- **ATURAN WAJIB SUARA (3× ULANG)**: Setelah ${safeName} mengucapkan trigger suara **"I'm ready to play Recall Percakapan (Dialog 2 Orang)"**, **WAJIB bacakan dialog 2 karakter tersebut sebanyak 3 KALI berturut-turut** (dengan pembedaan nama/intonasi 2 tokoh yang konsisten dan jeda antar-putaran) sebelum ${safeName} menjawab! *(Jika ${safeName} meminta **Assessment Mode**, bacakan 1 kali saja).*`
         : '';
       return `${masterHeader}
 
 ## 📐 SPESIFIKASI KHUSUS LEVEL ${level.toUpperCase()} (RECALL PERCAKAPAN 2 ORANG)
 
 > [!IMPORTANT]
-> Simulasi ini melatih kemampuan menangkap dinamika pembicaraan 2 tokoh, perubahan rencana di tengah jalan, angka/syarat, dan pembagian tugas akhir tanpa melihat catatan.
+> Simulasi ini melatih kemampuan menangkap dinamika pembicaraan 2 tokoh: siapa mengusulkan apa, opsi mana yang ditolak/diubah, angka/syarat, dan keputusan serta pembagian tugas akhir tanpa melihat catatan.
 
 1. **Panjang & Format Dialog**: ${spec.dialogueLength}
 2. **Kompleksitas Alur**: ${spec.complexity}
@@ -9495,19 +9517,20 @@ Langsung jalankan **BAGIAN A** (tampilkan cerita/monolog **Ronde 1 (Level ${leve
 ## 🏛️ PROTOKOL PERMAINAN (${rounds} RONDE BERTAHAP)
 
 ### Langkah 1 — Skenario Percakapan 2 Karakter
-- Buat dialog yang hidup dan realistis antara 2 karakter (beri nama yang jelas, misal rekan kerja/klien/teman) tentang **"${safeTopic}"** sesuai spesifikasi **Level ${level}**.
-- Setelah menyajikan/membacakan dialog, minta ${safeName} menutup/menggulir teks dialog tersebut lalu menceritakan kembali secara lengkap:
-  1. **Siapa tokoh yang terlibat & apa masalah/tujuan awalnya?**
-  2. **Fakta, angka, waktu, atau perubahan rencana apa yang muncul di tengah obrolan?**
-  3. **Apa kesepakatan final dan pembagian tugas masing-masing tokoh?**${voiceNote}
+- Buat dialog yang hidup dan realistis antara 2 karakter (beri nama & peran yang jelas) tentang **"${safeTopic}"** sesuai spesifikasi **Level ${level}**.
+- Setelah menyajikan/membacakan dialog, minta ${safeName} menutup/menggulir teks dialog tersebut lalu menjelaskan kembali 4 hal:
+  1. **Siapa tokoh yang terlibat & perannya?**
+  2. **Apa tujuan atau masalah awalnya?**
+  3. **Perubahan rencana, penolakan usulan, atau angka/syarat apa yang muncul di tengah obrolan?**
+  4. **Apa keputusan final dan siapa penanggung jawab (owner) masing-masing tugas?**${voiceNote}
 - **Tunggu jawaban ${safeName}.**
 
 ### Langkah 2 — Audit Kesetiaan Informasi (Fidelity Check)
 Setelah ${safeName} menjawab, evaluasi dengan presisi:
-1. **📊 Skor Recall Percakapan (0–100)**.
+1. **📊 Skor Recall Percakapan (0–100)** berdasarkan rubrik: **25% identitas & peran tokoh**, **25% masalah/tujuan awal**, **25% perubahan rencana/fakta tengah**, dan **25% keputusan akhir & pembagian tugas (owner)**.
 2. **✅ Poin Dialog yang Akurat**: Informasi yang berhasil direkonstruksi dengan tepat.
-3. **⚠️ Detail yang Terlewat / Tertukar**: Misalnya salah menyebutkan angka, syarat yang dibatalkan, atau tertukar siapa yang bertugas melakukan apa.
-4. Jika masih ada kalimat penjelasan yang kurang pas dan dikoreksi, minta ${safeName} merangkum ulang 1 kalimat kuncinya, lalu lanjutkan ke **Ronde Berikutnya** (sampai ${rounds} ronde selesai).
+3. **⚠️ Detail yang Terlewat / Tertukar (Maksimal 1–2 Poin)**: Misalnya tertukar antara usulan yang ditolak vs keputusan akhir, atau tertukar siapa yang bertugas melakukan apa.
+4. Lanjutkan ke **Ronde Berikutnya** dengan skenario dialog baru (sampai ${rounds} ronde selesai).
 
 ---
 
@@ -9516,15 +9539,19 @@ Sapa **${safeName}** dan langsung sajikan dialog **Ronde 1 (Level ${level})** te
     }
 
     case 'structured-speaking': {
+      const activeFrameworkGuide =
+        level === 'Low'
+          ? `**Pola 3 Langkah P-A-C (Khusus Level Low)**:\n   - **1. Pendapat (P)**: _"Menurut saya..."_\n   - **2. Alasan (A)**: _"Karena..."_\n   - **3. Contoh (C)**: _"Misalnya..."_\n   *(Fokus hanya pada 3 langkah P-A-C ini, jangan mencampurkan kerangka 4 langkah P-P-A-K pada Level Low!).*`
+          : `**Pola 4 Struktur P-P-A-K (Level ${level})**:\n   - **1. Poin Utama (P)**\n   - **2. Penjelasan (P)**\n   - **3. Alasan / Contoh Konkret (A)**\n   - **4. Kesimpulan (K)**: _"Karena itu..."_`;
       const voiceCue = isVoice
-        ? `\n4. Karena **Mode Suara (Voice)** aktif, tambahkan instruksi ini di akhir tantangan: _"👉 Klik ikon **Mode Suara / Dictate (🎙️)** di sebelah mikrofon, lalu ucapkan jawabanmu dengan suara keras sesuai urutan langkah di atas!"_`
+        ? `\n4. Karena **Mode Suara (Voice)** aktif, tambahkan instruksi ini di akhir tantangan: _"👉 Klik ikon **Mode Suara / Dictate (🎙️)** di sebelah mikrofon, lalu ucapkan jawabanmu dengan tenang mengikuti urutan kerangka di atas!"_`
         : '';
       return `${masterHeader}
 
 ## 📐 SPESIFIKASI KHUSUS LEVEL ${level.toUpperCase()} (STRUCTURED SPEAKING — ANTI MELOMPAT-LOMPAT)
 
 > [!IMPORTANT]
-> **Filosofi Latihan (Dari Kurikulum Latihan Bicara)**:
+> **Filosofi Latihan**:
 > Masalah utama saat bicara sering kali bukan tidak punya ide, melainkan **pikiran berjalan lebih cepat daripada ucapan** sehingga kalimat melompat-lompat lalu tiba-tiba blank. Jangan mengejar bicara cepat dulu — latih **keruntutan menyusun pikiran** satu bagian demi satu bagian!
 
 1. **Kerangka Struktur Level ${level}**: ${spec.framework}
@@ -9537,17 +9564,16 @@ Sapa **${safeName}** dan langsung sajikan dialog **Ronde 1 (Level ${level})** te
 
 ### Langkah 1 — Tantangan Bicara Terstruktur
 1. Berikan 1 pertanyaan atau situasi nyata seputar **"${safeTopic}"** sesuai **Level ${level}**.
-2. Tampilkan panduan kerangka yang wajib dipakai di level ini:
-   - Jika **Level Low (Pola 3 Langkah P-A-C)**: **1. Pendapat** (_"Menurut saya..."_) → **2. Alasan** (_"Karena..."_) → **3. Contoh** (_"Misalnya..."_).
-   - Jika **Level Medium / Hard (Pola 4 Struktur P-P-A-K)**: **1. Poin Utama** → **2. Penjelasan** → **3. Alasan/Contoh Konkret** → **4. Kesimpulan** (_"Karena itu..."_).
-3. Minta ${safeName} menjawab secara runtut (lewat rekaman suara/Voice maupun ketikan) tanpa terburu-buru.${voiceCue}
+2. Tampilkan hanya kerangka yang aktif untuk level ini:
+   ${activeFrameworkGuide}
+3. Minta ${safeName} menjawab secara runtut (lewat suara maupun ketikan) tanpa terburu-buru.${voiceCue}
    **Berhenti dan tunggu jawaban ${safeName}!**
 
-### Langkah 2 — Audit Keruntutan & Wajib Ucap Ulang Versi Model
+### Langkah 2 — Audit Keruntutan & 1 Koreksi Prioritas
 Setelah ${safeName} menjawab:
-1. **📊 Skor Structured Speaking (0–100)**: Nilai keruntutan alur pikiran (apakah sudah runtut per bagian atau masih melompat-lompat).
-2. **🔍 Bedah Tiap Komponen Struktur**: Tunjukkan bagian mana (Pendapat/Poin, Penjelasan, Alasan/Contoh, Kesimpulan) yang sudah kuat dan mana yang masih perlu diperjelas.
-3. **✨ Contoh Kalimat Runtut & Natural (Wajib Diucapkan Ulang)**: Tuliskan 1 paragraf versi penyampaian yang super rapi, mengalir, dan natural. Jika masih ada bagian yang melompat atau perlu diperbaiki, **minta ${safeName} membacakan/mengucapkan ulang versi model tersebut lewat Mode Suara / Dictate (🎙️) terlebih dahulu sebelum lanjut ke ronde berikutnya**!
+1. **📊 Skor Structured Speaking (0–100)** berdasarkan rubrik: **40% kelengkapan struktur**, **30% urutan logis (tidak melompat-lompat)**, **20% relevansi isi**, dan **10% kejelasan** (jangan menghukum jeda berpikir wajar atau aksen).
+2. **🔍 Bedah Tiap Komponen & 1 Koreksi Prioritas**: Tunjukkan komponen mana yang sudah rapi dan berikan maksimal **1 perbaikan paling berdampak**.
+3. **✨ 1 Versi Jawaban Model**: Berikan 1 contoh rangkaian kalimat yang rapi dan natural. ${isVoice ? 'Jika tadi masih ada bagian struktur yang terlewat atau melompat, **minta ' + safeName + ' mengucapkan ulang versi model (atau bagian yang diperbaiki) tersebut terlebih dahulu sebelum lanjut ke ronde berikutnya**!' : ''}
 4. Jika **Level Hard**, berikan 1 pertanyaan interupsi/susulan singkat sebelum pindah ke ronde berikutnya. Lanjutkan hingga **${rounds} ronde**!
 
 ---
@@ -9565,35 +9591,31 @@ Sapa **${safeName}** dengan suportif dan langsung berikan tantangan **Ronde 1 (L
 ## 📐 SPESIFIKASI KHUSUS LEVEL ${level.toUpperCase()} (CONVERSATION INITIATION — BUKA & NIMBRUNG OBROLAN)
 
 > [!IMPORTANT]
-> **Tujuan Latihan**: Melatih otot sosial untuk memulai percakapan duluan dan ikut masuk ("nimbrung/nabrak") ke obrolan teman atau rekan kerja tanpa menunggu kalimat yang sempurna.
+> **Tujuan Latihan**: Melatih otot sosial untuk memulai percakapan duluan dan ikut masuk ("nimbrung/nabrak") ke obrolan teman atau rekan kerja dengan pembuka yang relevan, ramah, dan mudah dijawab.
 
 1. **Teknik Fokus Level ${level}**: ${spec.techniqueFocus}
 2. **Tipe Situasi Sosial**: ${spec.scenarioType}
 3. **Aturan Tugas Pemain**: ${spec.taskRule}
 
-### 🧰 Referensi Teknik Initiation yang Dilatih:
-- **4 Teknik Pembuka Utama**:
-  1. **Contextual Opening**: Membuka obrolan dari situasi di sekitar (_"Hari ini sibuk banget?"_, _"Biasanya istirahat di sini?"_).
-  2. **Question Opening**: Pertanyaan sederhana yang tidak butuh jawaban panjang (_"Gimana pekerjaan hari ini?"_, _"Sudah berapa lama kerja di sini?"_).
-  3. **Self-Introduction Opening**: Perkenalan singkat + lempar pertanyaan balik (_"Halo, saya dari bagian HSE. Kalau boleh tahu, kamu dari bagian mana?"_).
-  4. **Observation Opening**: Membuka dari sesuatu yang diamati (_"Kemarin saya lihat ada kegiatan training. Itu training untuk sertifikasi apa?"_).
-- **6 Kalimat Pembuka Cepat (Quick Entry / Nimbrung)**:
-  - Teman baru datang: _"Eh, dari mana?"_ | Teman bercerita: _"Terus gimana?"_ | Bahas kerjaan: _"Sekarang lagi sibuk apa?"_ | Bahas pengalaman: _"Serius? Kok bisa?"_ | Belum tahu topik: _"Lagi bahas apa nih?"_ | Ikut berpendapat: _"Kalau menurut gue..."_
+### 🧰 Referensi Pengembangan (4 Teknik & 6 Kalimat Cepat):
+*(Gunakan daftar ini sebagai referensi pengembangan, bukan materi yang harus dihafal sekaligus)*
+- **4 Teknik Pembuka**: (1) **Contextual Opening** (dari situasi sekitar), (2) **Question Opening** (pertanyaan ringan mudah dijawab), (3) **Self-Introduction + Lempar Balik**, (4) **Observation Opening** (dari hal yang diamati).
+- **6 Kalimat Cepat (Quick Entry)**: _"Eh, dari mana?"_ | _"Terus gimana?"_ | _"Sekarang lagi sibuk apa?"_ | _"Serius? Kok bisa?"_ | _"Lagi bahas apa nih?"_ | _"Kalau menurut gue..."_
 
 ---
 
 ## 🏛️ PROTOKOL PERMAINAN (${rounds} RONDE SIMULASI BUKA OBROLAN)
 
-### Langkah 1 — Penyajian Situasi Nyata
-1. Gambarkan 1 situasi sosial/kerja yang hidup seputar **"${safeTopic}"** sesuai **Level ${level}**.
+### Langkah 1 — Penyajian Situasi Nyata (Tanpa Membocorkan Contoh Jawaban)
+1. Gambarkan 1 situasi sosial/kerja yang spesifik dalam 1–2 kalimat seputar **"${safeTopic}"** sesuai **Level ${level}** (jangan beri contoh kalimat pembuka sebelum ${safeName} mencoba!).
 2. Tantang ${safeName} sesuai aturan tugas Level ${level} (${spec.taskRule}).${voiceCue}
 3. **Berhenti dan tunggu jawaban ${safeName}!**
 
-### Langkah 2 — Evaluasi Kealamian, Drill Ucap Ulang & Balasan Teman
+### Langkah 2 — Balasan Lawan Bicara & Evaluasi Ringkas
 Setelah ${safeName} menjawab:
-1. **📊 Skor Inisiasi & Kealamian (0–100)**: Nilai apakah kalimat pembukanya terasa luwes, ramah, dan mudah dijawab oleh lawan bicara.
-2. **🔍 Identifikasi Teknik & Variasi Upgrade**: Sebutkan teknik mana yang berhasil dipakai ${safeName}, lalu berikan 1–2 alternatif kalimat pembuka/nimbrung lain yang lebih natural (jika kalimat ${safeName} masih kaku, minta ucapkan ulang 1 versi upgrade paling natural!).
-3. **💬 Simulasi Balasan Lawan Bicara**: Balas kalimat pembuka ${safeName} secara singkat dan hangat seolah kamu adalah teman/rekan kerjanya, lalu sajikan situasi **Ronde Berikutnya** (sampai ${rounds} ronde)!
+1. **💬 Balasan Lawan Bicara**: Balas dulu kalimat pembuka ${safeName} secara natural dan hangat dalam 1–2 kalimat seolah kamu adalah rekan bicara di situasi tersebut.
+2. **📊 Skor Inisiasi (0–100)** berdasarkan rubrik: **40% relevansi konteks**, **30% kealamian & keramahan**, dan **30% kemudahan untuk ditanggapi lawan bicara**.
+3. **✨ 1 Alternatif Lebih Luwes (Bila Perlu)**: Berikan maksimal 1 alternatif kalimat pembuka yang lebih natural (jika kalimat ${safeName} tadi masih kaku${isVoice ? ', minta ucapkan ulang 1 kalimat alternatif tersebut' : ''}), lalu sajikan situasi **Ronde Berikutnya** (sampai ${rounds} ronde)!
 
 ---
 
@@ -9610,7 +9632,7 @@ Sapa **${safeName}** dan langsung sajikan situasi **Ronde 1 (Level ${level})** s
 ## 📐 SPESIFIKASI KHUSUS LEVEL ${level.toUpperCase()} (CONVERSATION CONTINUATION — SAMBUNG OBROLAN)
 
 > [!IMPORTANT]
-> **Rumus Inti Anti-Diam**: **Dengar → Tangkap 1 Kata Kunci → Tanggapi → Tanyakan Sesuatu (Pola: Tanggapan → Pertanyaan → Pengembangan)**.
+> **Rumus Inti Anti-Diam**: **Dengar → Tangkap 1 Kata Kunci → Tanggapi → Tanyakan Sesuatu**.
 > Jawaban lawan bicara adalah bahan bakar untuk kalimatmu selanjutnya!
 
 1. **Teknik Fokus Level ${level}**: ${spec.techniqueFocus}
@@ -9618,7 +9640,7 @@ Sapa **${safeName}** dan langsung sajikan situasi **Ronde 1 (Level ${level})** s
 3. **Hal yang Harus Dihindari**: ${spec.antiPattern}
 
 ### 🧰 4 Teknik Menyambung Percakapan (Continuation):
-1. **Follow-up Question**: Mengembangkan 1 kata dari ucapan lawan bicara menjadi pertanyaan lanjutan (_"Oh ke Bandung? Sama siapa? Berapa lama di jalan?"_).
+1. **Follow-up Question**: Mengembangkan 1 kata/frasa dari ucapan lawan bicara menjadi pertanyaan lanjutan yang mudah dijawab.
 2. **Reflective Response**: Mengulang inti jawaban lawan bicara dengan kata sendiri (_"Oh, jadi tantangannya lebih ke koordinasi tim di lapangan ya?"_).
 3. **Self-Disclosure**: Menceritakan sedikit pengalaman pribadimu lalu melempar kesempatan balik (_"Saya juga lagi coba rutin olahraga, tapi kadang sulit konsisten. Kalau kamu gimana?"_).
 4. **Topic Expansion**: Mencabangkan topik ke hal yang masih berhubungan (_Pekerjaan → Pengalaman → Kesulitan → Lingkungan → Rencana_).
@@ -9630,21 +9652,20 @@ Sapa **${safeName}** dan langsung sajikan situasi **Ronde 1 (Level ${level})** s
 ### Langkah 1 — Pernyataan Lawan Bicara
 1. Ucapkan 1–2 kalimat pernyataan dari seorang teman/rekan kerja seputar **"${safeTopic}"**.
 2. Minta ${safeName} untuk:
-   - Menyebutkan **kata kunci** yang ia tangkap dari ucapan tersebut.
+   - Menyebutkan **1 kata/frasa kunci** yang ia tangkap dari ucapan tersebut.
    - Menyusun kalimat balasan sesuai target **Level ${level}** (${spec.taskRule}).${voiceCue}
 3. **Berhenti dan tunggu jawaban ${safeName}!**
 
 ### Langkah 2 — Audit Singkat & Rantai Obrolan Bersambung (Continuous Chain)
 Setelah ${safeName} menjawab:
-1. **📊 Skor Continuation (0–100)** & **🔍 Bedah Teknik** (*Follow-up, Reflective, Self-Disclosure, Topic Expansion*) secara ringkas.
-2. **✨ Contoh Balasan Paling Natural**: Berikan 1 contoh respons ideal yang hangat dan luwes (jika kalimat ${safeName} terasa buntu/kaku, minta ucapkan ulang versi idealnya dulu).
+1. **📊 Skor Continuation (0–100)** berdasarkan rubrik: **30% ketepatan menangkap inti**, **35% relevansi tanggapan**, **25% kualitas follow-up question**, dan **10% keluwesan** (jangan menilai panjang jawaban sebagai kualitas).
+2. **✨ 1 Contoh Balasan Natural (Bila Perlu)**: Berikan 1 versi respons yang lebih luwes hanya bila balasan ${safeName} terasa buntu/kaku${isVoice ? ' (minta ucapkan ulang jika ada koreksi penting)' : ''}.
 3. **💬 Jawaban Teman & Umpan Rantai Berikutnya (WAJIB NYAMBUNG TERUS!)**:
    - **JANGAN memutus obrolan atau langsung pindah ke Ronde 2 sendiri!**
-   - Tetaplah berperan sebagai teman yang sama di dalam ronde aktif ini: **jawab pertanyaan ${safeName} tadi secara natural dalam 1–2 kalimat**, lalu **selipkan 1–2 detail/umpan baru** yang bercabang organik dari obrolan tersebut (*Topic Expansion*: misal makanan → harga/lokasi → suasana kerja → rencana akhir pekan).
-   - Minta ${safeName} menangkap **kata kunci baru** dari balasanmu itu untuk terus menyambung obrolan di ronde ini.
-4. **🚦 Kendali Pindah Ronde di Tangan ${safeName}**:
-   - Biarkan rantai obrolan di ronde ini mengalir bebas selama ${safeName} masih membalas.
-   - **HANYA tutup ronde ini dan buka Ronde Berikutnya (Ronde 2, 3, ... sampai ${rounds}) KETIKA ${safeName} sendiri yang memutuskannya** (misal dengan mengucapkan/mengetik **"Lanjut Ronde 2"**, **"Tutup ronde"**, atau **"Ganti topik"**)! Saat ${safeName} bilang begitu, beri rangkuman singkat ronde tersebut lalu lempar pernyataan teman baru untuk ronde berikutnya.
+   - Tetaplah berperan sebagai teman yang sama di dalam ronde aktif ini: **jawab pertanyaan ${safeName} tadi secara natural dalam 1–2 kalimat**, lalu **selipkan 1 detail/umpan baru** yang masih relevan agar ${safeName} bisa menyambung lagi.
+4. **🚦 Kendali Pindah Ronde**:
+   - Biarkan rantai obrolan di ronde ini berlanjut (atau setelah 3 giliran balasan di ronde ini tawarkan apakah mau lanjut di topik ini atau pindah ronde).
+   - **Segera tutup ronde aktif dan buka Ronde Berikutnya (Ronde 2..${rounds}) kapan pun ${safeName} mengucapkan/mengetik "Lanjut Ronde 2", "Tutup ronde", atau "Ganti topik"**!
 
 ---
 
@@ -9655,14 +9676,15 @@ Sapa **${safeName}** dan langsung lemparkan pernyataan teman di **Ronde 1 (Level
     case 'speaking-simulation': {
       const charRole = (characterName || '').trim() || 'Rekan kerja / teman akrab yang santai';
       const voiceIntro = isVoice
-        ? `\n   - Tutup pembukaan dengan instruksi singkat: _"👉 Aktifkan ikon **Mode Suara / Dictate (🎙️)** di sebelah mikrofon lalu langsung balas sapaan di bawah (atau ucapkan **'I'm ready to practice'** untuk mulai)!"_`
+        ? `\n   - Tutup pembukaan dengan instruksi singkat: _"👉 Aktifkan ikon **Mode Suara / Dictate (🎙️)** di sebelah mikrofon lalu langsung balas sapaan di bawah!"_`
         : '';
       return `${masterHeader}
 
 ## 📐 SPESIFIKASI KHUSUS LEVEL ${level.toUpperCase()} (SIMULASI NGOBROL 2 ARAH — LIVE SPARRING)
 
 > [!IMPORTANT]
-> **Target Utama**: Berlatih ngobrol dua arah secara langsung dan alami (bukan sekadar baca teori), sampai ${safeName} nyaman memulai, menyambung, dan mengembangkan percakapan tanpa bergantung pada skrip.
+> **Target Utama**: Berlatih ngobrol dua arah secara langsung dan alami sambil mengasah **Response (40%)**, **Expansion (35%)**, dan **Engagement (25%)**.
+> **Aturan Kesesuaian Konteks**: Sapaan pembuka lawan bicara **WAJIB langsung relevan dengan situasi/topik "${safeTopic}"** — jangan membuka diskusi teknis/HSE/kerja dengan basa-basi yang tidak nyambung lalu tiba-tiba melompat menguji SOP!
 
 - **Peranmu (Lawan Bicara)**: **${charRole}**
 - **Situasi & Latar**: **${safeTopic}**
@@ -9673,20 +9695,19 @@ Sapa **${safeName}** dan langsung lemparkan pernyataan teman di **Ronde 1 (Level
 
 ## 🏛️ PROTOKOL SIMULASI & EVALUASI 3 INDIKATOR (${rounds} PUTARAN DIALOG)
 
-1. **Bagian 1 — Dialog Alami (In-Character)**:
+1. **Bagian 1 — Dialog Alami Dalam Peran (In-Character)**:
    - Kamu berperan sebagai **${charRole}** dan ${safeName} berperan sebagai dirinya sendiri.
-   - Mulai percakapan (atau minta ${safeName} menyapa duluan jika situasi mengharuskan), lalu lakukan obrolan bolak-balik yang mengalir selama **${rounds} putaran**.${voiceIntro}
-2. **Bagian 2 — Audit 3 Indikator di Bawah Setiap Balasan**:
-   Setiap kali ${safeName} membalas, berikan respons dialogmu terlebih dahulu secara natural (kalau jawaban ${safeName} berbelok/improvisasi ke topik baru yang masih wajar, **langsung ikuti improvisasinya secara alami tanpa pengumuman kaku!**), lalu di bawahnya tampilkan kotak evaluasi singkat terhadap **3 Indikator Utama** ini:
-   - **1. Kemampuan Merespons (Response)**: Apakah jawaban ${safeName} nyambung, jelas, dan tidak kaku?
-   - **2. Kemampuan Mengembangkan Percakapan (Expansion)**: Apakah ${safeName} menggunakan *Follow-up Question*, *Reflective Response*, atau *Self-Disclosure*?
-   - **3. Daya Tarik Obrolan (Engagement)**: Apakah balasan ${safeName} membuat lawan bicara tertarik melanjutkan percakapan? + Berikan **✨ 1 Saran Kalimat Upgrade** yang lebih natural jika diperlukan.
-3. Di akhir putaran ke-**${rounds}**, berikan **📊 Rapor Simulasi & Skor Total (0–100)** beserta analisis perkembangan komunikasi ${safeName}, lalu tawarkan: _"Mau lanjut **conversation improvise** bebas?"_ (jika ${safeName} jawab **"Continue"**, lanjutkan mengobrol tanpa batas!).
+   - Gambarkan situasi **"${safeTopic}"** dalam 1–2 kalimat, lalu mulai sapaan pertama yang **langsung nyambung dengan konteks topik tersebut** (atau minta ${safeName} menyapa duluan bila situasi mengharuskan).${voiceIntro}
+2. **Bagian 2 — Pisahkan Balasan Dialog dari Feedback Ringkas**:
+   Setiap kali ${safeName} membalas:
+   - **Pertama (In-Character)**: Jawab dulu secara natural dalam peranmu (1–3 kalimat) dan jaga obrolan tetap mengalir (jika ${safeName} bertanya atau berimprovisasi yang masih relevan, ikuti secara alami tanpa memutus percakapan!).
+   - **Kedua (Feedback Ringkas di Bawah Garis Pemisah)**: Berikan audit singkat 1 baris per indikator (**Response 40%**, **Expansion 35%**, **Engagement 25%**) + maksimal **1 Saran Kalimat Upgrade** jika ada yang kaku (jangan tampilkan formulir rubrik panjang yang mengganggu ritme dialog).
+3. Di akhir putaran ke-**${rounds}**, berikan **📊 Rapor Simulasi & Skor Total (0–100)** beserta 1 saran utama, lalu tawarkan: _"Mau lanjut **conversation improvise** bebas?"_ (jika ${safeName} jawab **"Continue"**, lanjutkan mengobrol!).
 
 ---
 
 ## 📋 MULAI SESI SEKARANG
-Gambarkan situasi **"${safeTopic}"** dalam 2 kalimat, lalu langsung mulai sapaan pertama sebagai **${charRole}** dan tunggu balasan **${safeName}**!`;
+Gambarkan situasi **"${safeTopic}"** dalam 1–2 kalimat, lalu langsung mulai sapaan pertama yang relevan sebagai **${charRole}** dan tunggu balasan **${safeName}**!`;
     }
 
     case 'feynman-technique': {
